@@ -1,34 +1,49 @@
-import { HealthcareAccess } from "@/components/healthcare/healthcare-access";
-import { HealthcareComingSoon } from "@/components/healthcare/healthcare-coming-soon";
-import { HealthcareCta } from "@/components/healthcare/healthcare-cta";
+"use client";
+
+import { useRef } from "react";
+
+import { HealthcareBookingTime } from "@/components/healthcare/healthcare-booking-time";
+import { CareThreadProgress } from "@/components/healthcare/healthcare-care-thread";
+import { HealthcareConsultation } from "@/components/healthcare/healthcare-consultation";
+import { HealthcareConvergence } from "@/components/healthcare/healthcare-convergence";
 import { HealthcareFamily } from "@/components/healthcare/healthcare-family";
+import { HealthcareFuture } from "@/components/healthcare/healthcare-future";
 import { HealthcareHero } from "@/components/healthcare/healthcare-hero";
-import { HealthcareJourney } from "@/components/healthcare/healthcare-journey";
+import { HealthcareHistory } from "@/components/healthcare/healthcare-history";
+import { HealthcareMedication } from "@/components/healthcare/healthcare-medication";
+import { HealthcareNearbyCare } from "@/components/healthcare/healthcare-nearby-care";
+import { HealthcarePrescription } from "@/components/healthcare/healthcare-prescription";
 import { HealthcareReferral } from "@/components/healthcare/healthcare-referral";
-import { HealthcareTrust } from "@/components/healthcare/healthcare-trust";
 import { HealthcareVeterinary } from "@/components/healthcare/healthcare-veterinary";
 import { PartnerConnection } from "@/components/services/partner-connection";
 import { RelatedServices } from "@/components/services/related-services";
 import { getServicePage } from "@/config/services.content";
 
 /**
- * Healthcare-only premium connected-care experience.
- * Grocery and other services keep their own layouts.
+ * Healthcare V2 — THE CARE THREAD
+ * Continuous connected-care storytelling. Grocery and other services untouched.
  */
 export function HealthcarePageExperience() {
   const content = getServicePage("healthcare");
+  const runRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <article>
-      <HealthcareHero />
-      <HealthcareAccess />
-      <HealthcareJourney />
-      <HealthcareReferral />
-      <HealthcareFamily />
-      <HealthcareVeterinary />
-      <HealthcareComingSoon />
-      <HealthcareTrust />
-      <HealthcareCta />
+      <div ref={runRef} id="care-thread" className="relative">
+        <CareThreadProgress targetRef={runRef} />
+        <HealthcareHero />
+        <HealthcareNearbyCare />
+        <HealthcareBookingTime />
+        <HealthcareConsultation />
+        <HealthcarePrescription />
+        <HealthcareMedication />
+        <HealthcareReferral />
+        <HealthcareHistory />
+        <HealthcareFamily />
+        <HealthcareVeterinary />
+        <HealthcareFuture />
+      </div>
+      <HealthcareConvergence />
       <PartnerConnection
         partnerId={content.partnerId}
         heading={content.partnerHeading}

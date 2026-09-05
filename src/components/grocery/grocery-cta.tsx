@@ -1,16 +1,16 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import Link from "next/link";
-
-import { groceryTokens } from "@/components/grocery/grocery.content";
 import {
-  GonaBag,
-  GonaLeaf,
-  GonaOrange,
-  GonaTomato,
-} from "@/components/grocery/grocery-visuals";
-import { Container } from "@/components/ui/container";
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import Link from "next/link";
+import { useRef } from "react";
+
+import { groceryMedia, groceryTokens } from "@/components/grocery/grocery.content";
+import { GroceryMediaImage } from "@/components/grocery/grocery-media";
 import { siteConfig } from "@/config/site.config";
 import { buttonClass } from "@/lib/ui";
 
@@ -18,111 +18,69 @@ function downloadHref(): string {
   return siteConfig.download.playStoreUrl ?? "/#download";
 }
 
+/**
+ * 08 — Groceries. Sorted.
+ * Typography-forward closure; doorstep as tight cinematic edge only.
+ */
 export function GroceryCta() {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const edgeX = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? ["0%", "0%"] : ["4%", "-2%"],
+  );
 
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(165deg,#166534_0%,#22C55E_45%,#86EFAC_100%)] py-20 text-white md:py-28">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(255,212,0,0.16),transparent_45%)]"
+    <section
+      ref={ref}
+      className="relative overflow-hidden bg-[#0A1A12] py-20 text-white md:py-28"
+    >
+      {/* Narrow cinematic edge — different crop from doorstep chapter */}
+      <motion.div
+        className="pointer-events-none absolute inset-y-0 right-0 w-[38%] max-w-md opacity-40 md:opacity-50"
+        style={{ x: edgeX }}
         aria-hidden="true"
-      />
-      <Container className="relative grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="max-w-xl">
-          <p className="mb-3 text-xs font-semibold tracking-[0.2em] text-white/75 uppercase">
-            GONA Grocery
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl">
-            Groceries. Sorted.
-          </h2>
-          <p className="mt-4 text-base text-white/80 md:text-lg">
-            Everything you need, through GONA.
-          </p>
-          <div className="mt-8">
-            <Link href={downloadHref()} className={buttonClass("yellow")}>
-              Download GONA
-            </Link>
-          </div>
-          <p className="mt-4 text-sm text-white/70">
-            Availability depends on your location.
-          </p>
-        </div>
+      >
+        <GroceryMediaImage
+          src={groceryMedia.doorstep.src}
+          objectPosition="78% 42%"
+          objectPositionMobile="70% 45%"
+          alt=""
+          fill
+          sizes="40vw"
+          className="scale-125"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#0A1A12_0%,rgba(10,26,18,0.55)_45%,rgba(10,26,18,0.2)_100%)]" />
+      </motion.div>
 
-        <div className="relative mx-auto aspect-square w-full max-w-sm" aria-hidden="true">
-          <div className="absolute inset-[12%] rounded-full bg-white/10 blur-2xl" />
-          <motion.div
-            className="absolute inset-[18%] z-10"
-            animate={
-              reduce
-                ? undefined
-                : {
-                    y: [0, -7, 0],
-                    transition: { duration: 7.5, repeat: Infinity, ease: "easeInOut" },
-                  }
-            }
-          >
-            <GonaBag className="h-full w-full drop-shadow-[0_24px_40px_rgba(0,0,0,0.25)]" />
-          </motion.div>
-          <motion.div
-            className="absolute top-[12%] right-[10%] z-20 w-14"
-            animate={
-              reduce
-                ? undefined
-                : {
-                    y: [0, -9, 0],
-                    transition: {
-                      duration: 6.2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.4,
-                    },
-                  }
-            }
-          >
-            <GonaTomato className="h-auto w-full drop-shadow-[0_12px_20px_rgba(0,0,0,0.2)]" />
-          </motion.div>
-          <motion.div
-            className="absolute bottom-[18%] left-[8%] z-20 w-12"
-            animate={
-              reduce
-                ? undefined
-                : {
-                    y: [0, 6, 0],
-                    transition: {
-                      duration: 7,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.9,
-                    },
-                  }
-            }
-          >
-            <GonaOrange className="h-auto w-full drop-shadow-[0_12px_18px_rgba(0,0,0,0.18)]" />
-          </motion.div>
-          <motion.div
-            className="absolute top-[28%] left-[12%] z-20 w-10 opacity-90"
-            animate={
-              reduce
-                ? undefined
-                : {
-                    y: [0, -5, 0],
-                    transition: {
-                      duration: 8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 1.2,
-                    },
-                  }
-            }
-          >
-            <GonaLeaf className="h-auto w-full" />
-          </motion.div>
-          <div
-            className="absolute right-[22%] bottom-[22%] size-3 rounded-full"
-            style={{ backgroundColor: groceryTokens.yellow }}
-          />
+      <div className="relative z-10 mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-14">
+        <p className="mb-6 text-[0.7rem] font-semibold tracking-[0.28em] text-white/45 uppercase">
+          The Grocery Run
+        </p>
+        <h2 className="font-display text-5xl leading-[0.98] md:text-7xl lg:text-[5.5rem]">
+          GROCERIES.
+          <span className="mt-1 block text-[#BBF7D0]">SORTED.</span>
+        </h2>
+        <p className="mt-6 text-sm tracking-[0.04em] text-white/60 md:text-base">
+          Seven Services. One GONA.
+        </p>
+        <div className="mt-10">
+          <Link href={downloadHref()} className={buttonClass("yellow")}>
+            Explore GONA
+          </Link>
         </div>
-      </Container>
+        <p
+          className="mt-10 text-[0.65rem] font-semibold tracking-[0.22em] uppercase"
+          style={{ color: groceryTokens.green }}
+        >
+          Availability depends on your location
+        </p>
+      </div>
     </section>
   );
 }

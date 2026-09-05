@@ -1,87 +1,142 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+} from "framer-motion";
+import { useRef, useState } from "react";
 
 import {
-  healthcareFamilyMembers,
-  healthcareRecordTypes,
+  healthcareFamilyNodes,
   healthcareTokens,
 } from "@/components/healthcare/healthcare.content";
-import { FamilyCareArt } from "@/components/healthcare/healthcare-visuals";
-import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/cn";
 
+/** 09 — Family · separate member threads within one care experience */
 export function HealthcareFamily() {
-  const [active, setActive] =
-    useState<(typeof healthcareFamilyMembers)[number]["id"]>("you");
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  const [active, setActive] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (reduce) {
+      setActive(0);
+      return;
+    }
+    const next = Math.min(
+      healthcareFamilyNodes.length - 1,
+      Math.floor(v * healthcareFamilyNodes.length),
+    );
+    setActive((prev) => (prev === next ? prev : next));
+  });
+
+  const stage = reduce ? 0 : active;
 
   return (
-    <section className="bg-[#F8FAFC] py-16 md:py-20 lg:py-24">
-      <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
-          <div>
-            <p
-              className="mb-3 text-xs font-semibold tracking-[0.18em] uppercase"
-              style={{ color: healthcareTokens.accent }}
-            >
-              Family healthcare
-            </p>
-            <h2 className="font-display text-3xl text-gona-black md:text-4xl">
-              Your family&apos;s care, connected.
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-gona-gray md:text-lg">
-              Keep important health context together — for you and the people you
-              care for — through one GONA healthcare experience.
-            </p>
+    <section
+      ref={ref}
+      data-care-chapter="family"
+      className="relative bg-[#F8FAFC]"
+    >
+      <div className="px-5 py-14 lg:hidden">
+        <p
+          className="text-[0.7rem] font-semibold tracking-[0.26em] uppercase"
+          style={{ color: healthcareTokens.accent }}
+        >
+          09 / Family
+        </p>
+        <h2 className="mt-3 font-display text-3xl text-gona-black">
+          Care for more than one.
+          <span className="mt-1 block text-[#1E3A5F]">
+            Without losing each story.
+          </span>
+        </h2>
+        <ul className="mt-8 space-y-5">
+          {healthcareFamilyNodes.map((node) => (
+            <li key={node.id} className="border-t border-black/6 pt-4">
+              <div className="flex items-center gap-3">
+                <span className="size-2.5 rounded-full bg-[#3B82F6]" />
+                <span className="font-display text-2xl text-gona-black">
+                  {node.label}
+                </span>
+              </div>
+              <div className="mt-3 ml-1 h-8 w-px bg-[#BFDBFE]" aria-hidden="true" />
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs text-[#94A3B8]">
+          Each member keeps a distinct care thread within the family experience.
+        </p>
+      </div>
 
-            <div
-              className="mt-8 flex flex-wrap gap-2"
-              role="tablist"
-              aria-label="Family members"
-            >
-              {healthcareFamilyMembers.map((member) => {
-                const on = active === member.id;
-                return (
-                  <button
-                    key={member.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={on}
-                    onClick={() => setActive(member.id)}
-                    onFocus={() => setActive(member.id)}
-                    className={cn(
-                      "rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
-                      on
-                        ? "border-[#3B82F6] bg-[#EFF6FF] text-[#1E3A5F]"
-                        : "border-black/10 bg-white text-gona-gray hover:border-[#BFDBFE]",
-                    )}
-                    style={{ outlineColor: healthcareTokens.accent }}
-                  >
-                    {member.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <ul className="mt-8 grid grid-cols-2 gap-3">
-              {healthcareRecordTypes.map((type) => (
-                <li
-                  key={type}
-                  className="rounded-xl border border-[#BFDBFE] bg-white px-4 py-3 text-sm font-medium text-gona-black"
+      <div className="relative hidden lg:block">
+        <div className="h-[170vh]">
+          <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+            <div className="mx-auto grid w-full max-w-[1280px] grid-cols-[0.9fr_1.1fr] items-center gap-12 px-8 lg:px-14">
+              <div>
+                <p
+                  className="text-[0.7rem] font-semibold tracking-[0.26em] uppercase"
+                  style={{ color: healthcareTokens.accent }}
                 >
-                  {type}
-                </li>
-              ))}
-            </ul>
-          </div>
+                  09 / Family
+                </p>
+                <h2 className="mt-4 font-display text-4xl text-gona-black xl:text-5xl">
+                  Care for more than one.
+                  <span className="mt-2 block text-[#1E3A5F]">
+                    Without losing each story.
+                  </span>
+                </h2>
+                <p className="mt-4 max-w-sm text-sm text-[#64748B]">
+                  Family care in one experience — each profile keeps its own
+                  thread.
+                </p>
+              </div>
 
-          <div className="overflow-hidden rounded-[1.5rem] border border-[#BFDBFE] bg-white shadow-[0_22px_50px_rgba(30,58,95,0.1)]">
-            <div className="aspect-[7/5] min-h-[18rem] w-full lg:min-h-[22rem]">
-              <FamilyCareArt active={active} />
+              <div className="relative h-[22rem]">
+                <svg
+                  className="absolute inset-0 h-full w-full"
+                  viewBox="0 0 480 360"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <circle cx="120" cy="180" r="28" fill="#EFF6FF" stroke="#3B82F6" strokeWidth="2.5" />
+                  {/* Distinct member threads — not merged */}
+                  <path d="M148 160 C220 90 280 70 360 70" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M148 180 C230 180 290 180 360 180" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M148 200 C220 270 280 290 360 290" stroke="#93C5FD" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="360" cy="70" r={stage === 1 ? 8 : 5} fill={stage === 1 ? "#3B82F6" : "#93C5FD"} />
+                  <circle cx="360" cy="180" r={stage === 2 ? 8 : 5} fill={stage === 2 ? "#3B82F6" : "#93C5FD"} />
+                  <circle cx="360" cy="290" r={stage === 3 ? 8 : 5} fill={stage === 3 ? "#3B82F6" : "#93C5FD"} />
+                  <circle cx="120" cy="180" r={stage === 0 ? 10 : 7} fill="#3B82F6" />
+                </svg>
+
+                <p className="absolute top-[10.4rem] left-8 font-display text-lg text-gona-black">
+                  You
+                </p>
+                <ul className="absolute top-6 right-4 space-y-14 text-right">
+                  {healthcareFamilyNodes.slice(1).map((node, i) => (
+                    <li key={node.id}>
+                      <span
+                        className={cn(
+                          "font-display text-xl transition-colors",
+                          stage === i + 1 ? "text-gona-black" : "text-black/30",
+                        )}
+                      >
+                        {node.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

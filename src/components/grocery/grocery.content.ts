@@ -1,103 +1,131 @@
-/** Grocery page visual tokens — local to Grocery, not a global redesign. */
+/** Grocery-only tokens, copy, and dedicated media slots — THE GROCERY RUN. */
+
 export const groceryTokens = {
   green: "#22C55E",
   soft: "#ECFDF3",
-  softDeep: "#D1FAE5",
-  leaf: "#16A34A",
-  cream: "#FFFEF9",
+  yellow: "#FFD400",
+  white: "#FFFFFF",
+  surface: "#F7F8F5",
   warm: "#F7F3EB",
   ink: "#111111",
-  muted: "#5B6470",
-  yellow: "#FFD400",
+  muted: "#666666",
+  deep: "#052E16",
+  forest: "#14532D",
+  leaf: "#16A34A",
 } as const;
 
-export const groceryCategories = [
-  { id: "produce", label: "Fruits & Vegetables", hint: "Fresh daily picks", tone: "#22C55E" },
-  { id: "dairy", label: "Dairy", hint: "Milk & essentials", tone: "#7DD3FC" },
-  { id: "staples", label: "Staples", hint: "Rice, oil & more", tone: "#FBBF24" },
-  { id: "snacks", label: "Snacks", hint: "Everyday treats", tone: "#FB923C" },
-  { id: "household", label: "Household", hint: "Home care basics", tone: "#A78BFA" },
-  { id: "personal", label: "Personal Care", hint: "Daily self-care", tone: "#F472B6" },
+/** Temporary fallback until dedicated assets are supplied. */
+export const GROCERY_FALLBACK_SRC = "/services/grocery.webp";
+
+export type GroceryMediaSlot = {
+  src: string;
+  objectPosition: string;
+  objectPositionMobile: string;
+  recommendedSize: string;
+  aspect: string;
+};
+
+/**
+ * Dedicated Grocery image slots.
+ * Drop matching files into public/services/grocery/ — missing files fall back to grocery.webp.
+ */
+export const groceryMedia = {
+  hero: {
+    src: "/services/grocery/grocery-hero.webp",
+    objectPosition: "58% 40%",
+    objectPositionMobile: "62% 36%",
+    recommendedSize: "1600×900",
+    aspect: "16:9",
+  },
+  categories: {
+    src: "/services/grocery/grocery-categories.webp",
+    objectPosition: "50% 48%",
+    objectPositionMobile: "50% 50%",
+    recommendedSize: "1600×900",
+    aspect: "16:9",
+  },
+  discovery: {
+    src: "/services/grocery/grocery-discovery.webp",
+    objectPosition: "36% 46%",
+    objectPositionMobile: "28% 44%",
+    recommendedSize: "1600×900",
+    aspect: "16:9",
+  },
+  fulfilment: {
+    src: "/services/grocery/grocery-fulfilment.webp",
+    objectPosition: "54% 42%",
+    objectPositionMobile: "58% 40%",
+    recommendedSize: "1600×900",
+    aspect: "16:9",
+  },
+  doorstep: {
+    src: "/services/grocery/grocery-doorstep.webp",
+    objectPosition: "48% 44%",
+    objectPositionMobile: "52% 42%",
+    recommendedSize: "1600×900",
+    aspect: "16:9",
+  },
+} as const satisfies Record<string, GroceryMediaSlot>;
+
+/** Journey rail stages — THE GROCERY RUN */
+export const groceryRunChapters = [
+  { id: "fresh", index: "01", label: "FRESH" },
+  { id: "aisle", index: "02", label: "AISLE" },
+  { id: "find", index: "03", label: "FIND" },
+  { id: "bag", index: "04", label: "BAG" },
+  { id: "prepare", index: "05", label: "PREPARE" },
+  { id: "door", index: "06", label: "DOOR" },
 ] as const;
 
-export const groceryDemoProducts = [
+export type GroceryRunChapterId = (typeof groceryRunChapters)[number]["id"];
+
+export const groceryAisleCategories = [
+  { id: "produce", label: "Fresh Produce", short: "PRODUCE" },
+  { id: "dairy", label: "Dairy & Everyday", short: "DAIRY" },
+  { id: "staples", label: "Staples", short: "STAPLES" },
+  { id: "snacks", label: "Snacks", short: "SNACKS" },
+  { id: "home", label: "Home & Personal Care", short: "HOME" },
+] as const;
+
+export const groceryDiscoveryConcepts = [
   {
-    id: "tomatoes",
-    name: "Farm Tomatoes",
-    unit: "500 g",
-    price: "₹42",
-    meta: "Available nearby",
-    kind: "produce" as const,
+    id: "search",
+    title: "SEARCH",
+    body: "Find everyday essentials.",
   },
   {
-    id: "milk",
-    name: "Fresh Milk",
-    unit: "1 L",
-    price: "₹58",
-    meta: "In stock",
-    kind: "dairy" as const,
+    id: "categories",
+    title: "CATEGORIES",
+    body: "Move quickly through what you need.",
   },
   {
-    id: "basmati",
-    name: "Basmati Rice",
-    unit: "5 kg",
-    price: "₹549",
-    meta: "Ready to order",
-    kind: "staple" as const,
+    id: "availability",
+    title: "AVAILABILITY",
+    body: "See products based on available inventory.",
   },
 ] as const;
 
-export const groceryJourneySteps = [
+export const groceryFulfilmentStages = [
   {
-    n: "01",
-    title: "Add your essentials",
-    body: "Browse real inventory-backed availability and build your basket with confidence.",
+    id: "received",
+    label: "ORDER RECEIVED",
+    support: "Enters GONA fulfilment.",
   },
   {
-    n: "02",
-    title: "Choose your address",
-    body: "Confirm where you want delivery — serviceability depends on your location.",
+    id: "prepared",
+    label: "PREPARED WITH CARE",
+    support: "Packed for local delivery.",
   },
   {
-    n: "03",
-    title: "Place your order",
-    body: "Checkout securely in the GONA app and submit your grocery order.",
+    id: "ready",
+    label: "READY FOR DELIVERY",
+    support: "Ready for the doorstep run.",
   },
-  {
-    n: "04",
-    title: "GONA prepares it",
-    body: "Your order is packed and prepared for fulfillment through GONA.",
-  },
-  {
-    n: "05",
-    title: "Delivered to you",
-    body: "Follow the journey until your essentials arrive at your door.",
-  },
-] as const;
-
-export const groceryTrackingStages = [
-  "Order Confirmed",
-  "Preparing",
-  "Ready",
-  "Out for Delivery",
-  "Delivered",
 ] as const;
 
 export const groceryTrustItems = [
-  {
-    title: "Real availability",
-    body: "See what is actually available before you order.",
-  },
-  {
-    title: "Local serviceability",
-    body: "Delivery depends on your area as GONA expands.",
-  },
-  {
-    title: "Secure checkout",
-    body: "Complete your order through the trusted GONA app flow.",
-  },
-  {
-    title: "GONA delivery",
-    body: "Orders move from preparation to your door with tracking.",
-  },
+  "Inventory-backed availability",
+  "Location-aware service",
+  "GONA fulfilment",
+  "Order tracking",
 ] as const;

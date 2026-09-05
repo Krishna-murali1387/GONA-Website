@@ -1,139 +1,178 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import {
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { useRef, useState } from "react";
 
 import {
-  groceryDemoProducts,
+  groceryDiscoveryConcepts,
+  groceryMedia,
   groceryTokens,
 } from "@/components/grocery/grocery.content";
-import { ProductVisual } from "@/components/grocery/grocery-visuals";
-import { Container } from "@/components/ui/container";
+import { GroceryMediaImage } from "@/components/grocery/grocery-media";
 import { cn } from "@/lib/cn";
 
+/**
+ * 03 — Find what you need
+ * Editorial discovery — no HTML phone UI over the photo’s embedded phone.
+ */
 export function GroceryDiscovery() {
   const reduce = useReducedMotion();
-  const [hovered, setHovered] = useState<string | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  const [active, setActive] = useState(0);
+  const count = groceryDiscoveryConcepts.length;
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (reduce) {
+      setActive(count - 1);
+      return;
+    }
+    const next = Math.min(count - 1, Math.floor(v * count));
+    setActive((prev) => (prev === next ? prev : next));
+  });
+
+  const imageY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [0, 0] : [12, -18],
+  );
+  const lineScale = useTransform(
+    scrollYProgress,
+    [0.72, 0.95],
+    reduce ? [1, 1] : [0, 1],
+  );
+
+  const stage = reduce ? count - 1 : active;
+  const current = groceryDiscoveryConcepts[stage] ?? groceryDiscoveryConcepts[0];
 
   return (
-    <section className="relative overflow-hidden bg-[#F7F3EB] py-16 md:py-24">
-      <Container>
-        <div className="grid items-end gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="max-w-md">
-            <p
-              className="mb-3 text-xs font-semibold tracking-[0.18em] uppercase"
-              style={{ color: groceryTokens.leaf }}
-            >
-              Product discovery
-            </p>
-            <h2 className="font-display text-3xl text-gona-black md:text-4xl">
-              Everything you&apos;re looking for.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-gona-gray md:text-lg">
-              Browse categories, search products and check real inventory-backed
-              availability before you order.
-            </p>
-            <ol className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
-              {["Browse", "Search", "Choose", "Add"].map((step, i) => (
-                <li
-                  key={step}
-                  className="rounded-2xl border border-black/6 bg-white/70 px-4 py-3"
+    <section
+      id="grocery-find"
+      ref={ref}
+      data-grocery-chapter="find"
+      className="relative scroll-mt-24 bg-[#F7F8F5]"
+    >
+      {/* Mobile */}
+      <div className="px-5 py-14 lg:hidden">
+        <p
+          className="text-[0.7rem] font-semibold tracking-[0.26em] uppercase"
+          style={{ color: groceryTokens.leaf }}
+        >
+          03 / Find
+        </p>
+        <h2 className="mt-3 font-display text-3xl text-gona-black">
+          Find what you need.
+        </h2>
+        <div className="relative mt-6 aspect-[4/5] overflow-hidden rounded-[1.25rem]">
+          <GroceryMediaImage
+            src={groceryMedia.discovery.src}
+            objectPosition={groceryMedia.discovery.objectPositionMobile}
+            objectPositionMobile={groceryMedia.discovery.objectPositionMobile}
+            alt="Customer browsing groceries with the GONA app"
+            fill
+            sizes="100vw"
+          />
+        </div>
+        <ul className="mt-8 space-y-6">
+          {groceryDiscoveryConcepts.map((concept, index) => (
+            <li key={concept.id} className="border-t border-black/8 pt-4">
+              <p className="text-[0.65rem] font-semibold tracking-[0.2em] text-[#666666] uppercase">
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <p className="mt-1 font-display text-2xl text-gona-black">
+                {concept.title}
+              </p>
+              <p className="mt-1 text-sm text-[#666666]">{concept.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Desktop sticky */}
+      <div className="relative hidden lg:block">
+        <div className="h-[170vh]">
+          <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+            <div className="mx-auto grid w-full max-w-[1280px] grid-cols-[0.95fr_1.05fr] items-center gap-12 px-8 lg:px-14">
+              <div className="max-w-md">
+                <p
+                  className="text-[0.7rem] font-semibold tracking-[0.26em] uppercase"
+                  style={{ color: groceryTokens.leaf }}
                 >
-                  <p className="text-[0.65rem] font-semibold tracking-[0.14em] text-gona-gray uppercase">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-1 font-display text-lg text-gona-black">
-                    {step}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          </div>
+                  03 / Find
+                </p>
+                <h2 className="mt-4 font-display text-4xl text-gona-black xl:text-5xl">
+                  Find what you need.
+                </h2>
 
-          <div className="relative">
-            <div className="flex items-end justify-center gap-3 sm:gap-5">
-              {groceryDemoProducts.map((product, index) => {
-                const isCenter = index === 1;
-                const isHovered = hovered === product.id;
-                const dim = hovered && !isHovered;
-
-                return (
-                  <motion.div
-                    key={product.id}
-                    className={cn(
-                      "relative w-[31%] max-w-[12rem] rounded-[1.5rem] border border-black/6 bg-white p-3 shadow-[0_18px_40px_rgba(17,17,17,0.08)] sm:p-4",
-                      isCenter && "z-10",
-                    )}
-                    initial={reduce ? false : { opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.45 }}
-                    transition={{ duration: 0.5, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                    onHoverStart={() => setHovered(product.id)}
-                    onHoverEnd={() => setHovered(null)}
-                    animate={
-                      reduce
-                        ? undefined
-                        : {
-                            y: isCenter ? -14 : 0,
-                            scale: isHovered ? 1.035 : dim ? 0.95 : isCenter ? 1.04 : 1,
-                            x: isCenter ? 0 : index === 0 ? -4 : 4,
-                            transition: { duration: 0.22 },
-                          }
-                    }
-                    style={{
-                      opacity: dim ? 0.72 : 1,
-                      filter: dim ? "saturate(0.85)" : "none",
-                      transition: "opacity 0.22s ease, filter 0.22s ease",
-                    }}
+                <div className="mt-12 min-h-[8.5rem]">
+                  <p
+                    key={current.id}
+                    className="font-display text-5xl tracking-[0.02em] text-gona-black xl:text-6xl"
                   >
-                    <ProductVisual
-                      kind={product.kind}
-                      className="mb-3 aspect-[4/5]"
-                    />
-                    <p className="font-display text-sm text-gona-black sm:text-base">
-                      {product.name}
-                    </p>
-                    <p className="mt-0.5 text-[11px] text-gona-gray sm:text-xs">
-                      {product.unit}
-                    </p>
-                    <div className="mt-2 flex items-center justify-between gap-2">
-                      <span className="text-sm font-semibold text-gona-black">
-                        {product.price}
-                      </span>
-                      <span
-                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase"
-                        style={{
-                          backgroundColor: groceryTokens.soft,
-                          color: groceryTokens.leaf,
-                        }}
-                      >
-                        {product.meta}
-                      </span>
-                    </div>
-                    <div
-                      className={cn(
-                        "mt-3 overflow-hidden transition-all duration-200",
-                        isHovered ? "max-h-10 opacity-100" : "max-h-0 opacity-0",
-                      )}
-                      aria-hidden="true"
-                    >
-                      <span
-                        className="inline-flex rounded-full px-3 py-1.5 text-xs font-semibold text-white"
-                        style={{ backgroundColor: groceryTokens.green }}
-                      >
-                        + Add
-                      </span>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    {current.title}
+                  </p>
+                  <p className="mt-3 text-base text-[#666666]">{current.body}</p>
+                </div>
+
+                <ul className="mt-10 space-y-3">
+                  {groceryDiscoveryConcepts.map((concept, index) => {
+                    const on = index === stage;
+                    return (
+                      <li key={concept.id} className="flex items-center gap-3">
+                        <span
+                          className={cn(
+                            "h-px transition-all duration-300",
+                            on ? "w-10 bg-[#22C55E]" : "w-4 bg-black/15",
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span
+                          className={cn(
+                            "text-xs font-semibold tracking-[0.18em] uppercase transition-colors duration-300",
+                            on ? "text-gona-black" : "text-black/30",
+                          )}
+                        >
+                          {concept.title}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <motion.div
+                  className="mt-10 h-px origin-left bg-[#22C55E]"
+                  style={{ scaleX: lineScale }}
+                  aria-hidden="true"
+                />
+              </div>
+
+              <motion.div
+                className="relative h-[70vh] max-h-[38rem] overflow-hidden rounded-[1.5rem]"
+                style={{ y: imageY }}
+              >
+                <GroceryMediaImage
+                  src={groceryMedia.discovery.src}
+                  objectPosition={groceryMedia.discovery.objectPosition}
+                  objectPositionMobile={groceryMedia.discovery.objectPositionMobile}
+                  alt="Customer browsing groceries with the GONA app"
+                  fill
+                  sizes="(max-width: 1280px) 50vw, 640px"
+                />
+              </motion.div>
             </div>
-            <p className="mt-6 text-center text-xs text-gona-gray">
-              Demonstration only — ordering happens in the GONA app.
-            </p>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

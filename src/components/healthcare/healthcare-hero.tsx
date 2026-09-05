@@ -1,89 +1,157 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { useRef } from "react";
 
-import { healthcareTokens } from "@/components/healthcare/healthcare.content";
-import { CareHeroScene } from "@/components/healthcare/healthcare-visuals";
-import { Container } from "@/components/ui/container";
-import { siteConfig } from "@/config/site.config";
+import {
+  healthcareMedia,
+  healthcareTokens,
+} from "@/components/healthcare/healthcare.content";
+import { HealthcareMediaImage } from "@/components/healthcare/healthcare-media";
 import { buttonClass } from "@/lib/ui";
 
-function downloadHref(): string {
-  return siteConfig.download.playStoreUrl ?? "/#download";
-}
-
+/** 01 — Care Starts Closer · warm local-care photography */
 export function HealthcareHero() {
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const mediaScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [1, 1] : [1.02, 1.06],
+  );
+  const copyY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [0, 0] : [0, 16],
+  );
+  const threadH = useTransform(
+    scrollYProgress,
+    [0.15, 0.85],
+    reduce ? ["100%", "100%"] : ["0%", "100%"],
+  );
 
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(165deg,#FFFFFF_0%,#EFF6FF_52%,#F8FAFC_100%)] pt-28 pb-16 md:pt-32 md:pb-24">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_75%_30%,rgba(59,130,246,0.14),transparent_55%)]"
-        aria-hidden="true"
-      />
-      <Container className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
-        <div className="relative z-10 max-w-xl">
-          <p
-            className="mb-4 text-xs font-semibold tracking-[0.2em] uppercase"
-            style={{ color: healthcareTokens.accent }}
-          >
-            GONA Healthcare Ecosystem
-          </p>
-          <h1 className="font-display text-4xl leading-[1.08] text-gona-black md:text-5xl lg:text-[3.35rem]">
-            Care that
-            <span className="mt-1 block" style={{ color: healthcareTokens.navy }}>
-              stays connected.
-            </span>
-          </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-gona-gray md:text-lg">
-            Discover local doctors, book appointments, access specialist care and
-            keep important health records connected through GONA.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={downloadHref()} className={buttonClass("primary")}>
-              Download GONA
-            </Link>
-            <a href="#healthcare-access" className={buttonClass("secondary")}>
-              Explore Healthcare
-            </a>
-          </div>
-          <p className="mt-5 text-sm text-gona-gray">
-            Healthcare availability depends on your location and participating
-            providers.
-          </p>
+    <section
+      ref={ref}
+      data-care-chapter="start"
+      className="relative bg-[#F8FAFC]"
+    >
+      <div className="relative min-h-[88svh] overflow-hidden md:min-h-[92svh]">
+        <motion.div className="absolute inset-0" style={{ scale: mediaScale }}>
+          <HealthcareMediaImage
+            src={healthcareMedia.hero.src}
+            objectPosition={healthcareMedia.hero.objectPosition}
+            objectPositionMobile={healthcareMedia.hero.objectPositionMobile}
+            alt="Local GONA healthcare visit with doctor and family"
+            fill
+            priority
+            sizes="100vw"
+          />
+        </motion.div>
+
+        {/* Localized left readability — preserve warm home atmosphere */}
+        <div
+          className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,23,42,0.72)_0%,rgba(15,23,42,0.38)_34%,rgba(15,23,42,0.08)_58%,transparent_72%)]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-32 bg-[linear-gradient(180deg,transparent,#F8FAFC)]"
+          aria-hidden="true"
+        />
+
+        {/* Care Thread begins — subtle backing for legibility on photo */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-[12%] hidden h-44 w-px md:block lg:left-[18%]"
+          aria-hidden="true"
+        >
+          <span className="absolute inset-y-0 left-1/2 w-3 -translate-x-1/2 bg-white/35 blur-[2px]" />
+          <motion.div
+            className="absolute inset-x-0 bottom-0 origin-bottom bg-[#3B82F6]"
+            style={{ height: threadH }}
+          />
+          <span className="absolute -top-1 left-1/2 size-2.5 -translate-x-1/2 rounded-full bg-[#3B82F6] shadow-[0_0_0_3px_rgba(255,255,255,0.55)]" />
         </div>
 
         <motion.div
-          className="relative mx-auto w-full max-w-xl lg:max-w-none"
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative z-10 mx-auto flex min-h-[88svh] w-full max-w-[1280px] flex-col justify-end px-5 pb-24 sm:px-8 md:min-h-[92svh] md:justify-center md:pb-28 lg:px-14"
+          style={{ y: copyY }}
         >
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-[#BFDBFE] bg-white shadow-[0_28px_60px_rgba(30,58,95,0.12)]">
-            <CareHeroScene className="aspect-[5/4] w-full min-h-[20rem] sm:min-h-[24rem] lg:min-h-[28rem]" />
-            <div className="pointer-events-none absolute inset-[12%] overflow-hidden rounded-[1.25rem]">
-              <Image
-                src="/services/healthcare.webp"
-                alt=""
-                fill
-                sizes="(max-width: 1024px) 90vw, 520px"
-                className="scale-110 object-cover object-[48%_28%] opacity-[0.12] blur-[1.5px] mix-blend-multiply"
-                priority
-              />
-            </div>
-            {!reduce && (
+          <div className="max-w-xl text-white">
+            <motion.p
+              className="mb-5 text-[0.7rem] font-semibold tracking-[0.28em] uppercase"
+              style={{ color: healthcareTokens.yellow }}
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.4 }}
+            >
+              01 / Care Starts Closer
+            </motion.p>
+
+            <h1 className="font-display text-[2.55rem] leading-[1.02] md:text-6xl lg:text-[4.2rem]">
               <motion.span
-                className="pointer-events-none absolute top-[48%] left-[62%] size-3.5 rounded-full bg-[#FFD400] shadow-[0_0_0_7px_rgba(255,212,0,0.22)]"
-                aria-hidden="true"
-                animate={{ scale: [1, 1.12, 1], opacity: [0.85, 1, 0.85] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              />
-            )}
+                className="block tracking-[0.04em]"
+                initial={reduce ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12, duration: 0.5 }}
+              >
+                Care starts closer.
+              </motion.span>
+              <motion.span
+                className="mt-2 block text-[#BFDBFE]"
+                initial={reduce ? false : { opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.26, duration: 0.5 }}
+              >
+                Healthcare that stays
+                <span className="block">with your story.</span>
+              </motion.span>
+            </h1>
+
+            <motion.p
+              className="mt-5 max-w-md text-base text-white/80 md:text-lg"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.48, duration: 0.4 }}
+            >
+              Nearby care, appointments and connected health context through
+              GONA.
+            </motion.p>
+
+            <motion.div
+              className="mt-8 flex flex-wrap gap-3"
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
+              <a href="#care-nearby" className={buttonClass("yellow")}>
+                Explore the care journey
+              </a>
+              <a href="#care-time" className={buttonClass("secondaryOnDark")}>
+                How care connects
+              </a>
+            </motion.div>
+
+            <motion.p
+              className="mt-6 text-[0.7rem] font-semibold tracking-[0.2em] text-white/45 uppercase"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.85, duration: 0.4 }}
+            >
+              The Care Thread
+            </motion.p>
           </div>
         </motion.div>
-      </Container>
+      </div>
     </section>
   );
 }

@@ -1,245 +1,157 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef } from "react";
-
-import { groceryTokens } from "@/components/grocery/grocery.content";
 import {
-  GonaBag,
-  GonaBread,
-  GonaLeaf,
-  GonaMilk,
-  GonaOrange,
-  GonaTomato,
-} from "@/components/grocery/grocery-visuals";
-import { Container } from "@/components/ui/container";
-import { siteConfig } from "@/config/site.config";
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { useRef } from "react";
+
+import { groceryMedia, groceryTokens } from "@/components/grocery/grocery.content";
+import { GroceryMediaImage } from "@/components/grocery/grocery-media";
 import { buttonClass } from "@/lib/ui";
 
-function downloadHref(): string {
-  return siteConfig.download.playStoreUrl ?? "/#download";
-}
-
+/** 01 — Fresh Arrival · immersive cinematic hero */
 export function GroceryHero() {
   const reduce = useReducedMotion();
-  const stageRef = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
 
-  useEffect(() => {
-    if (reduce) return;
-    const stage = stageRef.current;
-    if (!stage) return;
-
-    const mq = window.matchMedia("(pointer: fine) and (min-width: 1024px)");
-    if (!mq.matches) return;
-
-    let raf = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    const onMove = (event: PointerEvent) => {
-      const rect = stage.getBoundingClientRect();
-      const nx = (event.clientX - rect.left) / rect.width - 0.5;
-      const ny = (event.clientY - rect.top) / rect.height - 0.5;
-      targetX = nx * 8;
-      targetY = ny * 6;
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.07;
-      currentY += (targetY - currentY) * 0.07;
-      stage.style.setProperty("--gx", `${currentX.toFixed(2)}px`);
-      stage.style.setProperty("--gy", `${currentY.toFixed(2)}px`);
-      if (
-        Math.abs(targetX - currentX) > 0.05 ||
-        Math.abs(targetY - currentY) > 0.05
-      ) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        raf = 0;
-      }
-    };
-
-    stage.addEventListener("pointermove", onMove, { passive: true });
-    return () => {
-      stage.removeEventListener("pointermove", onMove);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, [reduce]);
-
-  return (
-    <section className="relative overflow-hidden bg-[linear-gradient(165deg,#FFFEF9_0%,#ECFDF3_48%,#F7F3EB_100%)] pt-28 pb-16 md:pt-32 md:pb-24">
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_78%_28%,rgba(34,197,94,0.18),transparent_52%)]"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-[18%] right-[8%] size-40 rounded-full bg-[#FFD400]/15 blur-3xl"
-        aria-hidden="true"
-      />
-      <Container className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-        <div className="relative z-10 max-w-xl">
-          <p
-            className="mb-4 text-xs font-semibold tracking-[0.2em] uppercase"
-            style={{ color: groceryTokens.leaf }}
-          >
-            GONA Grocery Delivery
-          </p>
-          <h1 className="font-display text-4xl leading-[1.05] text-gona-black md:text-5xl lg:text-[3.35rem]">
-            Everyday essentials,
-            <span className="mt-1 block" style={{ color: groceryTokens.leaf }}>
-              closer to you.
-            </span>
-          </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-gona-gray md:text-lg">
-            Browse everyday groceries, check availability and get your essentials
-            delivered through GONA.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href={downloadHref()} className={buttonClass("primary")}>
-              Download GONA
-            </Link>
-            <a href="#grocery-categories" className={buttonClass("secondary")}>
-              Explore Grocery
-            </a>
-          </div>
-          <p className="mt-5 text-sm text-gona-gray">
-            Availability depends on your location.
-          </p>
-        </div>
-
-        <div
-          ref={stageRef}
-          className="relative mx-auto aspect-[5/4] w-full max-w-md sm:max-w-lg lg:max-w-none"
-          style={
-            {
-              "--gx": "0px",
-              "--gy": "0px",
-            } as React.CSSProperties
-          }
-          aria-hidden="true"
-        >
-          <HeroComposition reduced={Boolean(reduce)} />
-        </div>
-      </Container>
-    </section>
+  const mediaScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [1, 1] : [1.04, 1.1],
   );
-}
-
-function HeroComposition({ reduced }: { reduced: boolean }) {
-  const float = (delay: number, amplitude = 8, duration = 7) =>
-    reduced
-      ? undefined
-      : {
-          y: [0, -amplitude, 0],
-          transition: {
-            duration,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-            delay,
-          },
-        };
+  const mediaY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [0, 0] : [0, 36],
+  );
+  const copyY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    reduce ? [0, 0] : [0, 18],
+  );
+  const fadeOut = useTransform(
+    scrollYProgress,
+    [0, 0.55, 0.9],
+    reduce ? [1, 1, 1] : [1, 0.85, 0],
+  );
 
   return (
-    <div className="absolute inset-0">
-      {/* Soft atmosphere — not a hard card frame */}
-      <div className="absolute top-[12%] right-[6%] size-48 rounded-full bg-[#22C55E]/15 blur-3xl" />
-      <div className="absolute bottom-[10%] left-[8%] size-40 rounded-full bg-[#FFD400]/12 blur-3xl" />
-
-      {/* Hero artwork with soft edge merge */}
-      <motion.div
-        className="absolute top-[10%] left-[8%] z-10 w-[58%] max-w-[280px] sm:left-[12%] sm:w-[54%]"
-        style={{
-          transform:
-            "translate3d(calc(var(--gx) * -0.3), calc(var(--gy) * -0.22), 0)",
-        }}
-        animate={float(0, 6, 8)}
-      >
-        <div
-          className="relative aspect-[4/3] overflow-hidden shadow-[0_28px_60px_rgba(17,17,17,0.16)]"
-          style={{
-            borderRadius: "1.75rem 1.35rem 1.9rem 1.45rem",
-            maskImage:
-              "radial-gradient(ellipse 92% 88% at 50% 48%, #000 58%, transparent 100%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 92% 88% at 50% 48%, #000 58%, transparent 100%)",
-          }}
+    <section
+      ref={ref}
+      data-grocery-chapter="fresh"
+      className="relative bg-[#0A1A12]"
+    >
+      <div className="relative min-h-[88svh] overflow-hidden md:min-h-[92svh]">
+        <motion.div
+          className="absolute inset-0"
+          style={{ scale: mediaScale, y: mediaY }}
         >
-          <Image
-            src="/services/grocery.webp"
-            alt=""
+          <GroceryMediaImage
+            src={groceryMedia.hero.src}
+            objectPosition={groceryMedia.hero.objectPosition}
+            objectPositionMobile={groceryMedia.hero.objectPositionMobile}
+            alt="GONA grocery delivery with fresh everyday essentials"
             fill
-            sizes="(max-width: 1024px) 50vw, 300px"
-            className="object-cover object-center"
             priority
+            sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#ECFDF3]/35 via-transparent to-transparent" />
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <motion.div
-        className="absolute top-[8%] right-[4%] z-20 w-16 sm:w-20"
-        style={{
-          transform: "translate3d(calc(var(--gx) * 0.55), calc(var(--gy) * 0.4), 0)",
-        }}
-        animate={float(0.5, 9, 6.5)}
-      >
-        <GonaTomato className="h-auto w-full drop-shadow-[0_14px_24px_rgba(185,28,28,0.28)]" />
-      </motion.div>
+        {/* Readability — restrained left wash only */}
+        <div
+          className="absolute inset-0 bg-[linear-gradient(105deg,rgba(5,46,22,0.78)_0%,rgba(5,46,22,0.42)_34%,rgba(5,46,22,0.12)_58%,transparent_74%)]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(247,248,245,0.92))]"
+          aria-hidden="true"
+        />
 
-      <motion.div
-        className="absolute top-[42%] right-[2%] z-20 w-12 sm:w-14"
-        style={{
-          transform: "translate3d(calc(var(--gx) * 0.7), calc(var(--gy) * 0.5), 0)",
-        }}
-        animate={float(1.2, 7, 7.5)}
-      >
-        <GonaLeaf className="h-auto w-full drop-shadow-[0_10px_18px_rgba(22,101,52,0.2)]" />
-      </motion.div>
+        <motion.div
+          className="relative z-10 mx-auto flex min-h-[88svh] w-full max-w-[1280px] flex-col justify-end px-5 pb-20 sm:px-8 md:min-h-[92svh] md:justify-center md:pb-24 lg:px-14"
+          style={{ y: copyY, opacity: fadeOut }}
+        >
+          <div className="max-w-xl text-white">
+            <motion.p
+              className="mb-5 text-[0.7rem] font-semibold tracking-[0.28em] uppercase"
+              style={{ color: groceryTokens.yellow }}
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.45 }}
+            >
+              01 / Fresh Arrival
+            </motion.p>
 
-      <motion.div
-        className="absolute right-[18%] bottom-[8%] z-20 w-12 sm:w-14"
-        style={{
-          transform: "translate3d(calc(var(--gx) * 0.45), calc(var(--gy) * 0.35), 0)",
-        }}
-        animate={float(0.8, 6, 8.2)}
-      >
-        <GonaMilk className="h-auto w-full drop-shadow-[0_12px_20px_rgba(14,165,233,0.22)]" />
-      </motion.div>
+            <h1 className="font-display text-[2.65rem] leading-[1.02] md:text-6xl lg:text-[4.35rem]">
+              <motion.span
+                className="block"
+                initial={reduce ? false : { opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              >
+                Fresh essentials.
+              </motion.span>
+              <motion.span
+                className="mt-1 block text-[#BBF7D0]"
+                initial={reduce ? false : { opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.28, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              >
+                One smooth run.
+              </motion.span>
+            </h1>
 
-      <motion.div
-        className="absolute bottom-[6%] left-[6%] z-20 w-20 sm:w-24"
-        style={{
-          transform: "translate3d(calc(var(--gx) * -0.4), calc(var(--gy) * 0.3), 0)",
-        }}
-        animate={float(1.4, 5, 9)}
-      >
-        <GonaBread className="h-auto w-full drop-shadow-[0_12px_20px_rgba(180,83,9,0.2)]" />
-      </motion.div>
+            <motion.p
+              className="mt-5 max-w-md text-base text-white/78 md:text-lg"
+              initial={reduce ? false : { opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.48, duration: 0.45 }}
+            >
+              Everyday groceries from available inventory — fulfilled through
+              GONA.
+            </motion.p>
 
-      <motion.div
-        className="absolute top-[58%] left-[2%] z-20 w-12 sm:w-[3.25rem]"
-        style={{
-          transform: "translate3d(calc(var(--gx) * -0.5), calc(var(--gy) * 0.25), 0)",
-        }}
-        animate={float(0.3, 8, 6.8)}
-      >
-        <GonaOrange className="h-auto w-full drop-shadow-[0_12px_18px_rgba(194,65,12,0.22)]" />
-      </motion.div>
+            <motion.div
+              className="mt-8 flex flex-wrap gap-3"
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.62, duration: 0.4 }}
+            >
+              <a href="#grocery-aisle" className={buttonClass("yellow")}>
+                Explore the grocery run
+              </a>
+              <a
+                href="#grocery-find"
+                className={buttonClass("secondaryOnDark")}
+              >
+                How it works
+              </a>
+            </motion.div>
 
-      <motion.div
-        className="absolute right-[8%] bottom-[36%] z-[8] w-16 opacity-90 sm:w-20"
-        style={{
-          transform: "translate3d(calc(var(--gx) * 0.25), calc(var(--gy) * 0.2), 0)",
-        }}
-        animate={float(1.8, 5, 8.5)}
-      >
-        <GonaBag className="h-auto w-full drop-shadow-[0_16px_28px_rgba(21,128,61,0.25)]" />
-      </motion.div>
-    </div>
+            <motion.p
+              className="mt-6 text-[0.7rem] font-semibold tracking-[0.22em] text-white/45 uppercase"
+              initial={reduce ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.5 }}
+            >
+              The Grocery Run
+            </motion.p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bridge into aisle — warm grocery-neutral */}
+      <div
+        className="h-10 bg-[linear-gradient(180deg,rgba(247,248,245,0.92),#F7F8F5)] md:h-14"
+        aria-hidden="true"
+      />
+    </section>
   );
 }
