@@ -1,26 +1,266 @@
 @import "tailwindcss";
 
+/* ─── GONA design tokens ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --gona-yellow: #ffd400;
+  --gona-black: #111111;
+  --gona-white: #ffffff;
+  --gona-light: #f5f5f5;
+  --gona-gray: #666666;
+  --gona-local-orange: #ff7a1a;
+
+  --background: var(--gona-white);
+  --foreground: var(--gona-black);
+  --muted: var(--gona-gray);
+  --surface: var(--gona-light);
+  --accent: var(--gona-yellow);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --container-max: 72rem;
+  --container-pad: clamp(1rem, 4vw, 2rem);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-pill: 9999px;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: clamp(1.75rem, 2.5vw, 2.25rem);
+  --text-4xl: clamp(2.25rem, 4vw, 3.5rem);
+  --text-5xl: clamp(2.75rem, 6vw, 4.5rem);
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
 }
 
 @theme inline {
+  --color-gona-yellow: var(--gona-yellow);
+  --color-gona-black: var(--gona-black);
+  --color-gona-white: var(--gona-white);
+  --color-gona-light: var(--gona-light);
+  --color-gona-gray: var(--gona-gray);
+  --color-gona-local-orange: var(--gona-local-orange);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-accent: var(--accent);
+
+  --font-sans: var(--font-gona-sans);
+  --font-display: var(--font-gona-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+  Base styles MUST live in @layer base so Tailwind utilities
+  (text-gona-yellow, etc.) can override them. Unlayered `a { color: inherit }`
+  previously made yellow text on black buttons invisible.
+*/
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-gona-sans), system-ui, sans-serif;
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-gona-display), var(--font-gona-sans), system-ui,
+      sans-serif;
+    font-weight: 700;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    color: inherit;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--gona-yellow) 70%, white);
+    color: var(--gona-black);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.container-gona {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.surface-dark {
+  background: var(--gona-black);
+  color: var(--gona-white);
+}
+
+.surface-dark h1,
+.surface-dark h2,
+.surface-dark h3,
+.surface-dark h4 {
+  color: var(--gona-white);
+}
+
+.surface-light {
+  background: var(--gona-light);
+  color: var(--gona-black);
+}
+
+.surface-white {
+  background: var(--gona-white);
+  color: var(--gona-black);
+}
+
+/* Shared CTA surfaces — explicit colors for reliable contrast */
+.gona-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.gona-btn:focus-visible {
+  outline: 2px solid var(--gona-yellow);
+  outline-offset: 2px;
+}
+
+.gona-btn-primary {
+  background: var(--gona-black);
+  color: var(--gona-yellow);
+  border: 1px solid var(--gona-black);
+}
+
+.gona-btn-primary:hover {
+  background: #1a1a1a;
+  color: var(--gona-yellow);
+}
+
+.gona-btn-yellow {
+  background: var(--gona-yellow);
+  color: var(--gona-black);
+  border: 1px solid var(--gona-yellow);
+}
+
+.gona-btn-yellow:hover {
+  background: #ffe14d;
+  color: var(--gona-black);
+}
+
+.gona-btn-secondary {
+  background: transparent;
+  color: var(--gona-black);
+  border: 1px solid color-mix(in srgb, var(--gona-black) 20%, transparent);
+}
+
+.gona-btn-secondary:hover {
+  border-color: color-mix(in srgb, var(--gona-black) 45%, transparent);
+  color: var(--gona-black);
+}
+
+.gona-btn-secondary-on-dark {
+  background: transparent;
+  color: var(--gona-white);
+  border: 1px solid color-mix(in srgb, var(--gona-white) 35%, transparent);
+}
+
+.gona-btn-secondary-on-dark:hover {
+  border-color: color-mix(in srgb, var(--gona-white) 60%, transparent);
+  color: var(--gona-white);
+}
+
+.gona-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid color-mix(in srgb, var(--gona-black) 15%, transparent);
+  background: var(--gona-white);
+  color: var(--gona-black);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.gona-chip:hover {
+  border-color: color-mix(in srgb, var(--gona-black) 40%, transparent);
+}
+
+.gona-chip:focus-visible {
+  outline: 2px solid var(--gona-yellow);
+  outline-offset: 2px;
+}
+
+.gona-chip-active {
+  background: var(--gona-yellow);
+  border-color: var(--gona-yellow);
+  color: var(--gona-black);
+}
+
+.gona-chip-active:hover {
+  background: #ffe14d;
+  border-color: #ffe14d;
+  color: var(--gona-black);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
