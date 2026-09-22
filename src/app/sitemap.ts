@@ -11,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     siteConfig.routes.services,
     ...siteConfig.services.map((service) => service.href),
     siteConfig.routes.local,
+    "/business",
+    "/business/cable",
     siteConfig.routes.about,
     siteConfig.routes.partners,
     siteConfig.routes.careers,

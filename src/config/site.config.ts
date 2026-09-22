@@ -163,7 +163,7 @@ export const siteConfig: SiteConfig = {
       { label: "Home", href: "/" },
       { label: "Services", href: "/services" },
       { label: "LOCAL", href: "/local" },
-      { label: "Business", href: "/business/cable" },
+      { label: "Business", href: "/business" },
       { label: "About", href: "/about" },
       { label: "Partners", href: "/partners" },
       { label: "Careers", href: "/careers" },

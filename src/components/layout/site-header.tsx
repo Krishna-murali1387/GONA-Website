@@ -30,8 +30,8 @@ function isPrimaryNavActive(pathname: string, href: string): boolean {
   if (href === "/services") {
     return pathname === "/services" || pathname.startsWith("/services/");
   }
-  if (href === "/business/cable") {
-    return pathname === "/business/cable" || pathname.startsWith("/business/cable/");
+  if (href === "/business") {
+    return pathname === "/business" || pathname.startsWith("/business/");
   }
   return pathname === href;
 }
@@ -43,7 +43,10 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const isHome = pathname === "/";
-  const onDarkHero = isHome && !scrolled && !open;
+  const isBusinessSurface =
+    pathname === "/business" || pathname.startsWith("/business/");
+  const onDarkSurface = isHome || isBusinessSurface;
+  const onDarkHero = onDarkSurface && !scrolled && !open;
   const downloadTarget = downloadHref(pathname);
   const downloadExternal = isExternalHref(downloadTarget);
 
@@ -68,7 +71,7 @@ export function SiteHeader() {
     };
   }, [open]);
 
-  const headerSurface = isHome
+  const headerSurface = onDarkSurface
     ? onDarkHero
       ? "border-transparent bg-transparent"
       : "border-white/8 bg-[#111111]/92 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl"
@@ -85,7 +88,7 @@ export function SiteHeader() {
         )}
       >
         <Container className="relative flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
-          <GonaLogo priority size={36} onDark={isHome} />
+          <GonaLogo priority size={36} onDark={onDarkSurface} />
 
           <nav
             className="absolute left-1/2 z-10 hidden -translate-x-1/2 items-center gap-3.5 lg:flex xl:gap-6"
@@ -100,10 +103,10 @@ export function SiteHeader() {
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     "group relative text-[0.8125rem] font-medium tracking-wide transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gona-yellow",
-                    isHome
+                    onDarkSurface
                       ? "text-white/72 hover:text-gona-white"
                       : "text-gona-black/70 hover:text-gona-black",
-                    active && (isHome ? "text-gona-yellow" : "text-gona-black"),
+                    active && (onDarkSurface ? "text-gona-yellow" : "text-gona-black"),
                   )}
                 >
                   {item.label}
@@ -111,7 +114,7 @@ export function SiteHeader() {
                     className={cn(
                       "absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 group-hover:scale-x-100",
                       active && "scale-x-100",
-                      isHome ? "text-gona-yellow" : "text-gona-black",
+                      onDarkSurface ? "text-gona-yellow" : "text-gona-black",
                     )}
                   />
                 </Link>
@@ -135,7 +138,7 @@ export function SiteHeader() {
               type="button"
               className={cn(
                 "inline-flex size-11 items-center justify-center rounded-full border transition-colors duration-300 lg:hidden",
-                isHome
+                onDarkSurface
                   ? "border-white/15 text-gona-white hover:border-gona-yellow/50 hover:text-gona-yellow"
                   : "border-black/10 text-gona-black hover:border-gona-black/30",
               )}
