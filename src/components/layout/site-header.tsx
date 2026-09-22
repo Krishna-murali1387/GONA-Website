@@ -30,6 +30,9 @@ function isPrimaryNavActive(pathname: string, href: string): boolean {
   if (href === "/services") {
     return pathname === "/services" || pathname.startsWith("/services/");
   }
+  if (href === "/business/cable") {
+    return pathname === "/business/cable" || pathname.startsWith("/business/cable/");
+  }
   return pathname === href;
 }
 
