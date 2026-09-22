@@ -172,6 +172,7 @@ export const siteConfig: SiteConfig = {
       { label: "About", href: "/about" },
       { label: "Careers", href: "/careers" },
       { label: "Partners", href: "/partners" },
+      { label: "Cable Software", href: "/business/cable" },
       { label: "Contact", href: "/contact" },
     ],
     footerSupport: [
