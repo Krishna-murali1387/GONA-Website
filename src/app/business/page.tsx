@@ -3,7 +3,7 @@ import { businessSite } from "@/config/business.config";
 import { createPageMetadata } from "@/lib/seo";
 
 const description =
-  "Explore GONA Business — professional software for cable networks and the next generation of businesses, institutions and operations.";
+  "Professional software by GONA for businesses, institutions and operations. Explore GONA Cable and the growing GONA Business software family.";
 
 export const metadata = {
   ...createPageMetadata({
@@ -12,7 +12,7 @@ export const metadata = {
     path: businessSite.path,
   }),
   title: {
-    absolute: "GONA Business | Business Software by GONA",
+    absolute: "GONA Business | Professional Business Software by GONA",
   },
 };
 

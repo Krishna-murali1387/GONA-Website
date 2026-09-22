@@ -2,34 +2,44 @@ import { cableSite } from "@/config/cable.config";
 
 export const businessSite = {
   path: "/business",
+  softwareSectionId: "our-software",
   futureSectionId: "whats-next",
 } as const;
 
 export const businessCopy = {
   hero: {
-    eyebrow: "GONA · BUSINESS",
-    headline: ["Software built for businesses", "that move the real world."],
+    eyebrow: "GONA BUSINESS",
+    headline: ["Run your business better.", "Grow it with GONA."],
     support:
-      "From local operators to schools, restaurants and industries — GONA Business is building a new generation of simple, powerful operating software.",
-    primaryCta: "Explore GONA Cable",
-    secondaryCta: "Discover what's next",
+      "Professional software designed around the way real businesses work — customers, teams, operations, communication and money in one connected experience.",
+    primaryCta: "Explore Our Software",
+    secondaryCta: "Explore GONA Cable",
+    trust: "Built by GONA TECHNOLOGIES",
+  },
+  positioning: {
+    heading: ["Software for the way", "real businesses work."],
+    support:
+      "GONA Business builds professional operating software for businesses, institutions and teams — starting with Cable Network Management.",
+  },
+  software: {
+    id: businessSite.softwareSectionId,
+    heading: "Our software",
   },
   flagship: {
     badge: "AVAILABLE NOW",
     name: "GONA Cable",
     subtitle: "Cable Network Management",
-    line: "Customers. Billing. Collections. Operators. Complaints. Communication. Your cable network, under control.",
+    line: "Run customers, connections, billing, collections, operators, complaints and communication from one professional system.",
     explore: "Explore GONA Cable",
     register: "Register Your Network",
   },
   future: {
     id: businessSite.futureSectionId,
-    heading: ["One business today.", "Many possibilities tomorrow."],
-    support:
-      "GONA Business is a growing family of professional software — each product built for a real operating world.",
+    heading: "What's next",
+    support: "A growing software family — concepts for the businesses GONA will serve next.",
   },
-  philosophy: {
-    heading: ["Different businesses.", "One philosophy."],
+  brand: {
+    heading: ["Different businesses.", "One standard."],
     principles: [
       "Simple to operate.",
       "Built around real workflows.",
@@ -37,21 +47,9 @@ export const businessCopy = {
       "Powered by GONA.",
     ],
   },
-  ecosystem: {
-    center: "GONA BUSINESS",
-    products: [
-      { id: "cable", label: "Cable", active: true },
-      { id: "schools", label: "Schools", active: false },
-      { id: "restaurants", label: "Restaurants", active: false },
-      { id: "industry", label: "Industry", active: false },
-      { id: "events", label: "Events", active: false },
-      { id: "workforce", label: "Workforce", active: false },
-      { id: "finance", label: "Finance", active: false },
-    ],
-  },
   closing: {
     eyebrow: "GONA BUSINESS",
-    headline: ["Built for what businesses", "become next."],
+    headline: ["Built for businesses", "ready for what's next."],
     support: "GONA Cable is available now.",
     explore: "Explore GONA Cable",
     register: "Register Your Network",
@@ -80,36 +78,36 @@ export const futureProducts: ReadonlyArray<{
     id: "schools",
     name: "GONA Schools",
     subtitle: "School & Education Management",
-    accent: "#7EB8FF",
+    accent: "#3B6FA0",
   },
   {
     id: "restaurants",
     name: "GONA Restaurants",
     subtitle: "Restaurant Operations Management",
-    accent: "#FF9B6A",
+    accent: "#C45C26",
   },
   {
     id: "industry",
     name: "GONA Industry",
     subtitle: "Factory & Industrial Operations",
-    accent: "#A8B4C4",
+    accent: "#5A6570",
   },
   {
     id: "events",
     name: "GONA Events",
     subtitle: "Event & Venue Management",
-    accent: "#C4A5FF",
+    accent: "#6B4C9A",
   },
   {
     id: "workforce",
     name: "GONA Workforce",
     subtitle: "Workforce & Field Operations",
-    accent: "#6EE7B7",
+    accent: "#2F7A5B",
   },
   {
     id: "finance",
     name: "GONA Finance",
     subtitle: "Business Finance & Collections",
-    accent: "#FFD400",
+    accent: "#B8860B",
   },
 ];
