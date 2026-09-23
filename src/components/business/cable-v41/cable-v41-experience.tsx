@@ -92,25 +92,27 @@ function SoftPad({
   children,
   className = "",
   deep,
+  compact,
 }: {
   title: string;
   children: ReactNode;
   className?: string;
   deep?: boolean;
+  compact?: boolean;
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl border shadow-[0_18px_40px_rgba(36,22,83,0.1)] ${className}`}
+      className={`cv41-hero-window overflow-hidden rounded-2xl border ${className}`}
       style={{
         borderColor: deep ? "rgba(255,255,255,0.12)" : `${CV.accent}28`,
-        background: deep ? "rgba(255,255,255,0.06)" : "#fff",
+        background: deep ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.94)",
       }}
     >
       <div
-        className="flex items-center gap-1.5 border-b px-4 py-2.5"
+        className={`flex items-center gap-1.5 border-b ${compact ? "px-3 py-2" : "px-4 py-2.5"}`}
         style={{
           borderColor: deep ? "rgba(255,255,255,0.1)" : `${CV.accent}18`,
-          background: deep ? "rgba(255,255,255,0.04)" : CV.soft,
+          background: deep ? "rgba(255,255,255,0.04)" : "rgba(241,238,255,0.85)",
         }}
       >
         <span className="h-2 w-2 rounded-full bg-[#FF5F57]/80" />
@@ -123,7 +125,7 @@ function SoftPad({
           {title}
         </span>
       </div>
-      <div className="p-4">{children}</div>
+      <div className={compact ? "p-3" : "p-4"}>{children}</div>
     </div>
   );
 }
@@ -131,22 +133,22 @@ function SoftPad({
 function HeroComposition() {
   const reduce = useReducedMotion();
   return (
-    <div className="relative mx-auto mt-12 max-w-5xl" aria-hidden>
+    <div className="cv41-hero-composition" aria-hidden>
       <motion.div
         className="relative z-10"
-        initial={reduce ? false : { opacity: 0, y: 36 }}
+        initial={reduce ? false : { opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
       >
-        <SoftPad title="Owner · Web" className="mx-auto max-w-xl">
-          <div className="grid grid-cols-3 gap-2">
+        <SoftPad title="Owner · Web" className="w-full" compact>
+          <div className="grid grid-cols-3 gap-1.5">
             {["Overview", "Customers", "Billing", "Collections", "Team", "Reports"].map((l, i) => (
               <div
                 key={l}
-                className="rounded-xl border px-2.5 py-2.5 text-center text-[0.7rem] font-semibold text-[#111111]/75"
+                className="rounded-lg border px-2 py-2 text-center text-[0.65rem] font-semibold text-[#111111]/75"
                 style={{
                   borderColor: i === 0 ? `${CV.accent}55` : "rgba(17,17,17,0.06)",
-                  background: i === 0 ? CV.soft : "#FAF8F5",
+                  background: i === 0 ? CV.soft : "rgba(250,248,245,0.9)",
                 }}
               >
                 {l}
@@ -157,24 +159,24 @@ function HeroComposition() {
       </motion.div>
 
       <motion.div
-        className="absolute top-10 -right-1 z-20 w-[9.5rem] sm:right-6 sm:w-44"
-        initial={reduce ? false : { opacity: 0, x: 40, y: 24 }}
+        className="absolute -right-2 bottom-[-0.75rem] z-20 w-[8.25rem] sm:-right-4 sm:w-36"
+        initial={reduce ? false : { opacity: 0, x: 28, y: 16 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       >
         <div
-          className="rounded-[1.6rem] border-2 bg-[#1a1230] p-2 shadow-[0_20px_40px_rgba(36,22,83,0.25)]"
+          className="rounded-[1.35rem] border-2 bg-[#1a1230]/95 p-1.5"
           style={{ borderColor: `${CV.accent}55` }}
         >
-          <div className="rounded-[1.2rem] bg-white p-2.5">
-            <p className="text-center text-[0.55rem] font-bold tracking-wide text-[#241653]">
+          <div className="rounded-[1.05rem] bg-white p-2">
+            <p className="text-center text-[0.5rem] font-bold tracking-wide text-[#241653]">
               OPERATOR
             </p>
-            <div className="mt-2 space-y-1.5">
+            <div className="mt-1.5 space-y-1">
               {["Customers", "Collect", "My Cash"].map((l, i) => (
                 <div
                   key={l}
-                  className="rounded-lg px-2 py-1.5 text-center text-[0.62rem] font-semibold"
+                  className="rounded-md px-1.5 py-1 text-center text-[0.58rem] font-semibold"
                   style={
                     i === 1
                       ? { background: CV.deep, color: CV.soft }
@@ -190,18 +192,18 @@ function HeroComposition() {
       </motion.div>
 
       <motion.div
-        className="absolute top-16 -left-1 z-0 w-40 opacity-95 sm:left-2 sm:w-48"
-        initial={reduce ? false : { opacity: 0, x: -36 }}
-        animate={{ opacity: 0.95, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute -bottom-2 -left-1 z-0 hidden w-36 opacity-90 sm:block sm:w-40"
+        initial={reduce ? false : { opacity: 0, x: -20 }}
+        animate={{ opacity: 0.9, x: 0 }}
+        transition={{ duration: 0.75, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
       >
-        <SoftPad title="Customer Portal">
-          <div className="space-y-2">
-            <div className="h-1.5 w-10 rounded-full" style={{ background: CV.accent }} />
+        <SoftPad title="Customer Portal" compact>
+          <div className="space-y-1.5">
+            <div className="h-1 w-8 rounded-full" style={{ background: CV.accent }} />
             {["Bills", "Connection", "Notices"].map((l) => (
               <div
                 key={l}
-                className="rounded-lg border border-[#111111]/06 bg-[#FAF8F5] px-2 py-1.5 text-[0.65rem] font-semibold text-[#111111]/7"
+                className="rounded-md border border-[#111111]/06 bg-[#F8F6FF]/90 px-2 py-1 text-[0.6rem] font-semibold text-[#111111]/7"
               >
                 {l}
               </div>
@@ -276,49 +278,54 @@ export function CableV41Experience() {
       <CableStickyNav />
 
       {/* Hero */}
-      <SectionShell id="cable-overview" className="relative overflow-hidden border-b border-[#6D4AFF]/12 bg-[linear-gradient(180deg,#F8F6FF_0%,#F1EEFF_55%,#F8F6FF_100%)]">
-        <div className="mx-auto max-w-6xl px-5 pt-8 pb-16 sm:px-6 sm:pt-10 sm:pb-20 lg:pb-24">
+      <SectionShell
+        id="cable-overview"
+        className="cv41-hero border-b border-[#6D4AFF]/12"
+      >
+        <div className="cv41-hero-inner mx-auto max-w-6xl px-5 pt-8 pb-16 sm:px-6 sm:pt-10 sm:pb-20 lg:pb-24">
           <BackToBusiness className="mb-8" />
-          <Reveal>
-            <div className="flex flex-wrap items-center gap-3">
-              <p className="text-xs font-bold tracking-[0.28em] uppercase" style={{ color: CV.deep }}>
-                {c.hero.eyebrow}
+          <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6">
+            <Reveal>
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="text-xs font-bold tracking-[0.28em] uppercase" style={{ color: CV.deep }}>
+                  {c.hero.eyebrow}
+                </p>
+                <span
+                  className="rounded-full border px-3 py-1 text-[0.6rem] font-bold tracking-[0.16em] uppercase"
+                  style={{
+                    borderColor: `${CV.accent}45`,
+                    background: CV.soft,
+                    color: CV.deep,
+                  }}
+                >
+                  {c.hero.badge}
+                </span>
+              </div>
+              <h1 className="mt-5 font-[family-name:var(--font-gona-display)] text-5xl font-extrabold tracking-tight text-[#111111] sm:text-7xl">
+                {c.hero.headline[0]}
+              </h1>
+              <p className="mt-2 text-sm font-semibold tracking-wide text-[#5A6570]">
+                {c.hero.subtitle}
               </p>
-              <span
-                className="rounded-full border px-3 py-1 text-[0.6rem] font-bold tracking-[0.16em] uppercase"
-                style={{
-                  borderColor: `${CV.accent}45`,
-                  background: CV.soft,
-                  color: CV.deep,
-                }}
+              <div className="mt-4 h-0.5 w-14 rounded-full" style={{ background: CV.accent }} />
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-[#5A6570] sm:text-lg">
+                {c.hero.support}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <BizYellowCta href={c.links.register}>{c.hero.primaryCta}</BizYellowCta>
+                <BizSecondaryCta href={c.links.portal} external>
+                  {c.hero.secondaryCta}
+                </BizSecondaryCta>
+              </div>
+              <a
+                href={`#${c.features.id}`}
+                className="mt-6 inline-flex text-sm font-semibold text-[#241653]/70 underline-offset-4 hover:text-[#241653] hover:underline"
               >
-                {c.hero.badge}
-              </span>
-            </div>
-            <h1 className="mt-5 font-[family-name:var(--font-gona-display)] text-5xl font-extrabold tracking-tight text-[#111111] sm:text-7xl">
-              {c.hero.headline[0]}
-            </h1>
-            <p className="mt-2 text-sm font-semibold tracking-wide text-[#5A6570]">
-              {c.hero.subtitle}
-            </p>
-            <div className="mt-4 h-0.5 w-14 rounded-full" style={{ background: CV.accent }} />
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-[#5A6570] sm:text-lg">
-              {c.hero.support}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <BizYellowCta href={c.links.register}>{c.hero.primaryCta}</BizYellowCta>
-              <BizSecondaryCta href={c.links.portal} external>
-                {c.hero.secondaryCta}
-              </BizSecondaryCta>
-            </div>
-            <a
-              href={`#${c.features.id}`}
-              className="mt-6 inline-flex text-sm font-semibold text-[#241653]/70 underline-offset-4 hover:text-[#241653] hover:underline"
-            >
-              {c.hero.tertiaryCta} ↓
-            </a>
-          </Reveal>
-          <HeroComposition />
+                {c.hero.tertiaryCta} ↓
+              </a>
+            </Reveal>
+            <HeroComposition />
+          </div>
         </div>
       </SectionShell>
 
