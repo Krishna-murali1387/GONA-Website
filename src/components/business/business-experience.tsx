@@ -213,8 +213,12 @@ export function BusinessExperience() {
                     />
                     <div className="relative flex items-start justify-between gap-3">
                       <div
-                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#111111]/8 bg-[#FAF8F5]"
-                        style={{ color: product.accent }}
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border bg-[#FAF8F5]"
+                        style={{
+                          color: product.accent,
+                          borderColor: `${product.accent}40`,
+                          background: product.accentSoft,
+                        }}
                       >
                         <BusinessProductIcon
                           id={product.id as FutureProductId}
@@ -222,7 +226,14 @@ export function BusinessExperience() {
                           accent={product.accent}
                         />
                       </div>
-                      <span className="rounded-full border border-[#111111]/1 bg-[#FAF8F5] px-2.5 py-1 text-[0.6rem] font-bold tracking-[0.16em] text-[#5A6570] uppercase">
+                      <span
+                        className="rounded-full border px-2.5 py-1 text-[0.6rem] font-bold tracking-[0.16em] uppercase"
+                        style={{
+                          color: product.accentDark,
+                          borderColor: `${product.accent}40`,
+                          background: product.accentSoft,
+                        }}
+                      >
                         Coming soon
                       </span>
                     </div>

@@ -167,18 +167,38 @@ export function SoftWindow({
 export function LabelChip({
   children,
   active,
+  accent,
+  accentSoft,
+  accentDark,
 }: {
   children: ReactNode;
   active?: boolean;
+  accent?: string;
+  accentSoft?: string;
+  accentDark?: string;
 }) {
+  const useProduct = Boolean(active && accent && accentSoft && accentDark);
   return (
     <span
-      className={cn(
-        "inline-flex rounded-full border px-2.5 py-1 text-[0.65rem] font-bold tracking-wide",
-        active
-          ? "border-[#FFD400]/50 bg-[#FFD400]/15 text-[#6B5A00]"
-          : "border-[#111111]/10 bg-white text-[#111111]/55",
-      )}
+      className={
+        useProduct
+          ? "inline-flex rounded-full border px-2.5 py-1 text-[0.65rem] font-bold tracking-wide"
+          : cn(
+              "inline-flex rounded-full border px-2.5 py-1 text-[0.65rem] font-bold tracking-wide",
+              active
+                ? "border-[#FFD400]/50 bg-[#FFD400]/15 text-[#6B5A00]"
+                : "border-[#111111]/10 bg-white text-[#111111]/55",
+            )
+      }
+      style={
+        useProduct
+          ? {
+              borderColor: `${accent}50`,
+              background: accentSoft,
+              color: accentDark,
+            }
+          : undefined
+      }
     >
       {children}
     </span>

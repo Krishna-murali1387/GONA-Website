@@ -6,6 +6,75 @@ export const businessSite = {
   futureSectionId: "whats-next",
 } as const;
 
+/** Parent GONA Business brand — do not replace with product accents. */
+export const gonaBusinessBrand = {
+  yellow: "#FFD400",
+  yellowInk: "#6B5A00",
+  yellowMuted: "#8A7400",
+} as const;
+
+export type ProductColorId =
+  | "cable"
+  | "schools"
+  | "restaurants"
+  | "industry"
+  | "events"
+  | "workforce"
+  | "finance";
+
+export type ProductColors = {
+  colorName: string;
+  accent: string;
+  accentSoft: string;
+  accentDark: string;
+};
+
+/** Single source of truth for software product color identities. */
+export const productColors: Record<ProductColorId, ProductColors> = {
+  cable: {
+    colorName: "Electric Violet",
+    accent: "#6D4AFF",
+    accentSoft: "#F1EEFF",
+    accentDark: "#241653",
+  },
+  schools: {
+    colorName: "Academic Blue",
+    accent: "#2563EB",
+    accentSoft: "#EFF6FF",
+    accentDark: "#172554",
+  },
+  restaurants: {
+    colorName: "Hospitality Orange",
+    accent: "#F97316",
+    accentSoft: "#FFF7ED",
+    accentDark: "#7C2D12",
+  },
+  industry: {
+    colorName: "Industrial Teal",
+    accent: "#0F766E",
+    accentSoft: "#F0FDFA",
+    accentDark: "#134E4A",
+  },
+  events: {
+    colorName: "Event Magenta",
+    accent: "#DB2777",
+    accentSoft: "#FDF2F8",
+    accentDark: "#831843",
+  },
+  workforce: {
+    colorName: "Workforce Green",
+    accent: "#16A34A",
+    accentSoft: "#F0FDF4",
+    accentDark: "#14532D",
+  },
+  finance: {
+    colorName: "Finance Indigo",
+    accent: "#4338CA",
+    accentSoft: "#EEF2FF",
+    accentDark: "#312E81",
+  },
+};
+
 export const businessCopy = {
   hero: {
     eyebrow: "GONA BUSINESS",
@@ -73,41 +142,43 @@ export const futureProducts: ReadonlyArray<{
   name: string;
   subtitle: string;
   accent: string;
+  accentSoft: string;
+  accentDark: string;
 }> = [
   {
     id: "schools",
     name: "GONA Schools",
     subtitle: "School & Education Management",
-    accent: "#3B6FA0",
+    ...productColors.schools,
   },
   {
     id: "restaurants",
     name: "GONA Restaurants",
     subtitle: "Restaurant Operations Management",
-    accent: "#C45C26",
+    ...productColors.restaurants,
   },
   {
     id: "industry",
     name: "GONA Industry",
     subtitle: "Factory & Industrial Operations",
-    accent: "#5A6570",
+    ...productColors.industry,
   },
   {
     id: "events",
     name: "GONA Events",
     subtitle: "Event & Venue Management",
-    accent: "#6B4C9A",
+    ...productColors.events,
   },
   {
     id: "workforce",
     name: "GONA Workforce",
     subtitle: "Workforce & Field Operations",
-    accent: "#2F7A5B",
+    ...productColors.workforce,
   },
   {
     id: "finance",
     name: "GONA Finance",
     subtitle: "Business Finance & Collections",
-    accent: "#B8860B",
+    ...productColors.finance,
   },
 ];

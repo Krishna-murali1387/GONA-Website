@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import {
@@ -10,7 +10,10 @@ import {
   Reveal,
   SoftWindow,
 } from "@/components/business/business-ui";
+import { productColors } from "@/config/business.config";
 import { cableProductCopy } from "@/config/cable-product.config";
+
+const CABLE = productColors.cable;
 
 const CABLE_NAV = [
   { id: "cable-overview", label: "Overview" },
@@ -44,22 +47,29 @@ function CableStickyNav() {
   return (
     <nav
       aria-label="Cable product sections"
-      className="sticky top-16 z-30 border-b border-[#111111]/8 bg-[#FAF8F5]/95 backdrop-blur-md md:top-[4.5rem]"
+      className="sticky top-16 z-30 border-b bg-[#FAF8F5]/95 backdrop-blur-md md:top-[4.5rem]"
+      style={{ borderBottomColor: `${CABLE.accent}28` } as CSSProperties}
     >
       <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
-        {CABLE_NAV.map((item) => (
-          <a
-            key={item.id}
-            href={`#${item.id}`}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD400] ${
-              active === item.id
-                ? "bg-[#111111] text-[#FFD400]"
-                : "text-[#5A6570] hover:bg-[#111111]/5 hover:text-[#111111]"
-            }`}
-          >
-            {item.label}
-          </a>
-        ))}
+        {CABLE_NAV.map((item) => {
+          const isActive = active === item.id;
+          return (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD400] ${
+                isActive ? "" : "text-[#5A6570] hover:bg-[#111111]/5 hover:text-[#111111]"
+              }`}
+              style={
+                isActive
+                  ? { background: CABLE.accentDark, color: CABLE.accentSoft }
+                  : undefined
+              }
+            >
+              {item.label}
+            </a>
+          );
+        })}
       </div>
     </nav>
   );
@@ -70,10 +80,13 @@ function TripleExperienceVisual() {
     <div className="relative grid gap-3 sm:grid-cols-3" aria-hidden>
       <SoftWindow title="Owner web" tone="light">
         <div className="space-y-2">
-          {["Overview", "Customers", "Billing", "Team"].map((l) => (
+          {["Overview", "Customers", "Billing", "Team"].map((l, i) => (
             <div
               key={l}
-              className="rounded-lg border border-[#111111]/6 bg-[#FAF8F5] px-2.5 py-2 text-[0.7rem] font-semibold text-[#111111]/7"
+              className="rounded-lg border bg-[#FAF8F5] px-2.5 py-2 text-[0.7rem] font-semibold text-[#111111]/7"
+              style={{
+                borderColor: i === 0 ? `${CABLE.accent}45` : "rgba(17,17,17,0.06)",
+              }}
             >
               {l}
             </div>
@@ -85,7 +98,10 @@ function TripleExperienceVisual() {
           <div className="rounded-lg bg-white px-2.5 py-2 text-center text-[0.65rem] font-semibold text-[#111111]/65">
             Search customer
           </div>
-          <div className="rounded-lg bg-[#111111] px-2.5 py-2.5 text-center text-[0.7rem] font-bold text-[#FFD400]">
+          <div
+            className="rounded-lg px-2.5 py-2.5 text-center text-[0.7rem] font-bold"
+            style={{ background: CABLE.accentDark, color: CABLE.accentSoft }}
+          >
             Collect
           </div>
           <div className="rounded-lg border border-[#111111]/1 bg-white/70 px-2.5 py-2 text-center text-[0.65rem] text-[#111111]/55">
@@ -95,7 +111,7 @@ function TripleExperienceVisual() {
       </SoftWindow>
       <SoftWindow title="Customer portal" tone="light" className="sm:mt-3">
         <div className="space-y-2">
-          <div className="h-1.5 w-10 rounded-full bg-[#FFD400]" />
+          <div className="h-1.5 w-10 rounded-full" style={{ background: CABLE.accent }} />
           <p className="text-[0.7rem] font-semibold text-[#111111]/75">Bills</p>
           <div className="h-1 w-full rounded-full bg-[#111111]/06" />
           <p className="text-[0.7rem] font-semibold text-[#111111]/75">Notices</p>
@@ -136,7 +152,10 @@ function FeatureList({ items }: { items: readonly string[] }) {
     <ul className="mt-5 space-y-2.5">
       {items.map((item) => (
         <li key={item} className="flex gap-2.5 text-sm leading-relaxed text-[#5A6570]">
-          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FFD400]" />
+          <span
+            className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full"
+            style={{ background: CABLE.accent }}
+          />
           <span>{item}</span>
         </li>
       ))}
@@ -155,8 +174,7 @@ export function CableProductExperience() {
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "radial-gradient(ellipse 50% 40% at 90% 0%, rgba(255,212,0,0.16), transparent 55%)",
+            background: `radial-gradient(ellipse 50% 40% at 90% 0%, ${CABLE.accent}18, transparent 55%), radial-gradient(ellipse 40% 30% at 10% 100%, rgba(255,212,0,0.10), transparent 50%)`,
           }}
         />
         <div className="relative mx-auto max-w-6xl px-5 pt-28 pb-14 sm:px-6 sm:pb-16 lg:pt-32 lg:pb-20">
@@ -165,13 +183,28 @@ export function CableProductExperience() {
               GONA Business · Available now
             </p>
             <div className="mt-3 flex flex-wrap items-center gap-3">
-              <p className="text-xs font-bold tracking-[0.32em] text-[#8A7400] uppercase">
+              <p
+                className="text-xs font-bold tracking-[0.32em] uppercase"
+                style={{ color: CABLE.accentDark }}
+              >
                 {c.hero.eyebrow}
               </p>
-              <span className="rounded-full border border-[#FFD400]/45 bg-[#FFD400]/18 px-3 py-1 text-[0.6rem] font-bold tracking-[0.18em] text-[#6B5A00] uppercase">
+              <span
+                className="rounded-full border px-3 py-1 text-[0.6rem] font-bold tracking-[0.18em] uppercase"
+                style={{
+                  borderColor: `${CABLE.accent}45`,
+                  background: CABLE.accentSoft,
+                  color: CABLE.accentDark,
+                }}
+              >
                 {c.hero.badge}
               </span>
             </div>
+            <div
+              className="mt-4 h-0.5 w-14 rounded-full"
+              style={{ background: CABLE.accent }}
+              aria-hidden
+            />
             <h1 className="mt-5 max-w-3xl font-[family-name:var(--font-gona-display)] text-[2.15rem] leading-[1.1] font-extrabold tracking-tight sm:text-5xl lg:text-[3.2rem]">
               <span className="block">{c.hero.headline[0]}</span>
               <span className="mt-1 block">{c.hero.headline[1]}</span>
@@ -212,7 +245,14 @@ export function CableProductExperience() {
           <Reveal>
             <div className="grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
               <div>
-                <LabelChip active>{c.experiences.owner.role}</LabelChip>
+                <LabelChip
+                  active
+                  accent={CABLE.accent}
+                  accentSoft={CABLE.accentSoft}
+                  accentDark={CABLE.accentDark}
+                >
+                  {c.experiences.owner.role}
+                </LabelChip>
                 <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-2xl font-bold tracking-tight sm:text-3xl">
                   {c.experiences.owner.title}
                 </h3>
@@ -222,7 +262,10 @@ export function CableProductExperience() {
                       key={g.title}
                       className="rounded-2xl border border-[#111111]/8 bg-white p-4 shadow-[0_10px_30px_rgba(17,17,17,0.04)]"
                     >
-                      <p className="text-xs font-bold tracking-wide text-[#8A7400] uppercase">
+                      <p
+                        className="text-xs font-bold tracking-wide uppercase"
+                        style={{ color: CABLE.accentDark }}
+                      >
                         {g.title}
                       </p>
                       <ul className="mt-3 space-y-1.5">
@@ -264,9 +307,14 @@ export function CableProductExperience() {
                         key={l}
                         className={`rounded-xl px-3 py-2.5 text-center text-xs font-semibold ${
                           i === 2
-                            ? "bg-[#111111] text-[#FFD400]"
+                            ? ""
                             : "border border-[#111111]/1 bg-white/80 text-[#111111]/7"
                         }`}
+                        style={
+                          i === 2
+                            ? { background: CABLE.accentDark, color: CABLE.accentSoft }
+                            : undefined
+                        }
                       >
                         {l}
                       </div>
@@ -292,7 +340,9 @@ export function CableProductExperience() {
                 <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-2xl font-bold tracking-tight sm:text-3xl">
                   {c.experiences.customer.title}
                 </h3>
-                <p className="mt-3 text-sm font-medium text-[#8A7400]">{c.experiences.customer.note}</p>
+                <p className="mt-3 text-sm font-medium" style={{ color: CABLE.accentDark }}>
+                  {c.experiences.customer.note}
+                </p>
                 <FeatureList items={c.experiences.customer.items} />
               </div>
               <SoftWindow title="Customer portal">
@@ -303,7 +353,10 @@ export function CableProductExperience() {
                       className="flex items-center justify-between rounded-xl border border-[#111111]/6 bg-[#FAF8F5] px-3 py-3"
                     >
                       <span className="text-xs font-semibold text-[#111111]/75">{l}</span>
-                      <span className="h-1.5 w-8 rounded-full bg-[#FFD400]/70" />
+                      <span
+                        className="h-1.5 w-8 rounded-full"
+                        style={{ background: `${CABLE.accent}B3` }}
+                      />
                     </div>
                   ))}
                 </div>
@@ -343,7 +396,8 @@ export function CableProductExperience() {
                 {c.search360.actions.map((a) => (
                   <span
                     key={a}
-                    className="rounded-full bg-[#111111] px-3 py-1.5 text-[0.7rem] font-bold text-[#FFD400]"
+                    className="rounded-full px-3 py-1.5 text-[0.7rem] font-bold"
+                    style={{ background: CABLE.accentDark, color: CABLE.accentSoft }}
                   >
                     {a}
                   </span>
@@ -371,7 +425,13 @@ export function CableProductExperience() {
             <SoftWindow title="Billing & collections">
               <div className="flex flex-wrap gap-2">
                 {["Paid", "Part Paid", "Due", "CASH", "UPI", "Receipt"].map((l) => (
-                  <LabelChip key={l} active={l === "Due" || l === "CASH"}>
+                  <LabelChip
+                    key={l}
+                    active={l === "Due" || l === "CASH"}
+                    accent={CABLE.accent}
+                    accentSoft={CABLE.accentSoft}
+                    accentDark={CABLE.accentDark}
+                  >
                     {l}
                   </LabelChip>
                 ))}
@@ -414,7 +474,13 @@ export function CableProductExperience() {
           </h2>
           <div className="mt-6 flex flex-wrap gap-2">
             {c.documents.items.map((item) => (
-              <LabelChip key={item} active>
+              <LabelChip
+                key={item}
+                active
+                accent={CABLE.accent}
+                accentSoft={CABLE.accentSoft}
+                accentDark={CABLE.accentDark}
+              >
                 {item}
               </LabelChip>
             ))}
@@ -436,11 +502,19 @@ export function CableProductExperience() {
             <SoftWindow title="Team access">
               <div className="space-y-3">
                 <div className="rounded-xl border border-[#111111]/8 bg-[#FAF8F5] px-4 py-3">
-                  <p className="text-xs font-bold tracking-wide text-[#8A7400] uppercase">Owner</p>
+                  <p
+                    className="text-xs font-bold tracking-wide uppercase"
+                    style={{ color: CABLE.accentDark }}
+                  >
+                    Owner
+                  </p>
                   <p className="mt-1 text-sm text-[#5A6570]">Invites operators · full network control</p>
                 </div>
                 <div className="rounded-xl border border-[#111111]/8 bg-[#FAF8F5] px-4 py-3">
-                  <p className="text-xs font-bold tracking-wide text-[#8A7400] uppercase">
+                  <p
+                    className="text-xs font-bold tracking-wide uppercase"
+                    style={{ color: CABLE.accentDark }}
+                  >
                     Operator
                   </p>
                   <p className="mt-1 text-sm text-[#5A6570]">
@@ -465,7 +539,10 @@ export function CableProductExperience() {
                 key={stage}
                 className="flex items-center gap-2 rounded-full border border-[#111111]/1 bg-white px-3 py-2 text-sm font-semibold text-[#1A2332] shadow-sm"
               >
-                <span className="font-mono text-[0.65rem] text-[#8A7400]">
+                <span
+                  className="font-mono text-[0.65rem]"
+                  style={{ color: CABLE.accentDark }}
+                >
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 {stage}
@@ -527,7 +604,10 @@ export function CableProductExperience() {
                 key={step}
                 className="rounded-2xl border border-[#111111]/8 bg-white p-4 shadow-[0_10px_30px_rgba(17,17,17,0.03)]"
               >
-                <span className="font-mono text-xs font-bold tracking-widest text-[#8A7400]">
+                <span
+                  className="font-mono text-xs font-bold tracking-widest"
+                  style={{ color: CABLE.accentDark }}
+                >
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <p className="mt-2 text-sm font-semibold text-[#1A2332]">{step}</p>

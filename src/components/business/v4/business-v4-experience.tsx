@@ -3,7 +3,7 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { HeroProductComposition } from "@/components/business/v4/hero-composition";
 import { SoftFrame, V4Cta } from "@/components/business/v4/v4-ui";
@@ -14,7 +14,12 @@ import {
   usePointerCssVars,
 } from "@/components/business/v4/v4-hooks";
 import { BusinessProductIcon } from "@/components/business/business-icons";
-import { futureProducts, type FutureProductId } from "@/config/business.config";
+import {
+  futureProducts,
+  productColors,
+  type FutureProductId,
+  type ProductColorId,
+} from "@/config/business.config";
 import { cableSite } from "@/config/cable.config";
 import { siteConfig } from "@/config/site.config";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
@@ -22,23 +27,28 @@ import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import "./business-v4.css";
 
 const PHILOSOPHY_WORDS = ["OPERATIONS", "PEOPLE", "CUSTOMERS", "MONEY"] as const;
+const CABLE = productColors.cable;
 
 const FAMILY = [
   {
-    id: "cable",
+    id: "cable" as ProductColorId,
     index: "01",
     name: "GONA Cable",
     subtitle: "Cable Network Management",
     status: "available" as const,
     href: cableSite.productPath,
+    ...productColors.cable,
   },
   ...futureProducts.map((p, i) => ({
-    id: p.id,
+    id: p.id as ProductColorId,
     index: String(i + 2).padStart(2, "0"),
     name: p.name,
     subtitle: p.subtitle,
     status: "soon" as const,
     href: undefined as string | undefined,
+    accent: p.accent,
+    accentSoft: p.accentSoft,
+    accentDark: p.accentDark,
   })),
 ];
 
@@ -197,18 +207,36 @@ function SceneCableFlagship() {
     <section
       id="our-software"
       ref={ref}
-      className="scroll-mt-24 overflow-hidden bg-[#F3EFE6] py-20 sm:py-28"
+      className="v4-cable-soft-surface scroll-mt-24 overflow-hidden py-20 sm:py-28"
+      style={
+        {
+          "--v4-product-accent": CABLE.accent,
+          "--v4-product-soft": CABLE.accentSoft,
+          "--v4-product-dark": CABLE.accentDark,
+        } as CSSProperties
+      }
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
-        <p className="text-xs font-bold tracking-[0.28em] text-[#8A7400] uppercase">
-          01 / AVAILABLE NOW
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p
+            className="text-xs font-bold tracking-[0.28em] uppercase"
+            style={{ color: CABLE.accentDark }}
+          >
+            01
+          </p>
+          <span className="v4-cable-badge">AVAILABLE NOW</span>
+        </div>
         <h2 className="mt-4 font-[family-name:var(--font-gona-display)] text-5xl font-extrabold tracking-tight text-[#111111] sm:text-7xl">
           GONA CABLE
         </h2>
         <p className="mt-2 text-sm font-semibold tracking-wide text-[#5A6570]">
           Cable Network Management
         </p>
+        <div
+          className="mt-4 h-0.5 w-16 rounded-full"
+          style={{ background: CABLE.accent }}
+          aria-hidden
+        />
         <p className="mt-5 max-w-xl text-base leading-relaxed text-[#5A6570]">
           Customers. Connections. Billing. Collections. Operators. Complaints. Communication.
           <span className="mt-2 block font-semibold text-[#111111]">One professional system.</span>
@@ -227,10 +255,20 @@ function SceneCableFlagship() {
           <SoftFrame title="GONA Cable · Owner" className="mx-auto max-w-3xl">
             <div className="grid gap-2 sm:grid-cols-3">
               {["Overview", "Customers", "Billing", "Collections", "Team", "Communications"].map(
-                (l) => (
+                (l, i) => (
                   <div
                     key={l}
-                    className="rounded-xl border border-[#111111]/8 bg-[#FAF9F6] px-3 py-3 text-sm font-semibold text-[#111111]/75"
+                    className="rounded-xl border bg-[#FAF9F6] px-3 py-3 text-sm font-semibold text-[#111111]/75"
+                    style={{
+                      borderColor:
+                        i === 0
+                          ? `${CABLE.accent}55`
+                          : "rgba(17, 17, 17, 0.08)",
+                      boxShadow:
+                        i === 0
+                          ? `inset 0 0 0 1px ${CABLE.accent}22, 0 0 18px ${CABLE.accent}18`
+                          : undefined,
+                    }}
                   >
                     {l}
                   </div>
@@ -460,11 +498,82 @@ function SceneConnected() {
   );
 }
 
-function FutureArt({ id }: { id: FutureProductId }) {
+function FutureArt({
+  id,
+  accent,
+  soft,
+  active = true,
+}: {
+  id: FutureProductId;
+  accent: string;
+  soft: string;
+  active?: boolean;
+}) {
   return (
-    <div className="flex h-40 items-center justify-center rounded-2xl border border-[#111111]/8 bg-white">
-      <BusinessProductIcon id={id} className="h-16 w-16" accent="#111111" />
+    <div
+      className="v4-future-art flex h-40 items-center justify-center rounded-2xl border"
+      style={{
+        borderColor: active ? `${accent}40` : "rgba(17, 17, 17, 0.08)",
+        background: active ? soft : "#ffffff",
+      }}
+    >
+      <BusinessProductIcon id={id} className="h-16 w-16" accent={active ? accent : "#111111"} />
     </div>
+  );
+}
+
+function FuturePanel({
+  product,
+  index,
+  active,
+}: {
+  product: (typeof futureProducts)[number];
+  index: number;
+  active: boolean;
+}) {
+  return (
+    <article
+      className="v4-future-panel w-[min(84vw,28rem)] shrink-0 rounded-[1.5rem] border border-[#111111]/1 bg-white p-6 shadow-[0_20px_50px_rgba(17,17,17,0.05)]"
+      data-active={active ? "true" : "false"}
+      style={
+        {
+          "--panel-accent": product.accent,
+          "--panel-soft": product.accentSoft,
+          "--panel-dark": product.accentDark,
+        } as CSSProperties
+      }
+    >
+      <div className="flex items-center gap-3">
+        <p
+          className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300"
+          style={{ color: active ? product.accentDark : "#8A7400" }}
+        >
+          {String(index + 2).padStart(2, "0")}
+        </p>
+        <span
+          className="h-0.5 w-8 rounded-full transition-colors duration-300"
+          style={{ background: active ? product.accent : "rgba(17,17,17,0.12)" }}
+          aria-hidden
+        />
+      </div>
+      <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-3xl font-bold">
+        {product.name}
+      </h3>
+      <p className="mt-2 text-sm text-[#5A6570]">{product.subtitle}</p>
+      <p
+        className="mt-4 inline-flex rounded-full border px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase transition-colors duration-300"
+        style={{
+          color: active ? product.accentDark : "#5A6570",
+          borderColor: active ? `${product.accent}40` : "rgba(17,17,17,0.1)",
+          background: active ? product.accentSoft : "transparent",
+        }}
+      >
+        Coming soon
+      </p>
+      <div className="mt-6">
+        <FutureArt id={product.id} accent={product.accent} soft={product.accentSoft} active={active} />
+      </div>
+    </article>
   );
 }
 
@@ -478,6 +587,18 @@ function SceneFuture() {
     offset: ["start start", "end end"],
   });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-72%"]);
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    if (mobile || reduced) return;
+    return scrollYProgress.on("change", (v) => {
+      const n = futureProducts.length;
+      const idx = Math.min(n - 1, Math.max(0, Math.floor(v * n + 0.001)));
+      setActiveIdx(idx);
+    });
+  }, [scrollYProgress, mobile, reduced]);
+
+  const active = futureProducts[activeIdx] ?? futureProducts[0];
 
   if (mobile || reduced) {
     return (
@@ -494,17 +615,39 @@ function SceneFuture() {
             {futureProducts.map((p, i) => (
               <article
                 key={p.id}
-                className="rounded-2xl border border-[#111111]/8 bg-white p-5"
+                className="v4-future-panel rounded-2xl border border-[#111111]/8 bg-white p-5"
+                data-active="true"
+                style={
+                  {
+                    "--panel-accent": p.accent,
+                    "--panel-soft": p.accentSoft,
+                  } as CSSProperties
+                }
               >
-                <p className="text-xs font-bold tracking-[0.2em] text-[#8A7400] uppercase">
-                  {String(i + 2).padStart(2, "0")} · Coming soon
-                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <p
+                    className="text-xs font-bold tracking-[0.2em] uppercase"
+                    style={{ color: p.accentDark }}
+                  >
+                    {String(i + 2).padStart(2, "0")}
+                  </p>
+                  <span
+                    className="inline-flex rounded-full border px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase"
+                    style={{
+                      color: p.accentDark,
+                      borderColor: `${p.accent}40`,
+                      background: p.accentSoft,
+                    }}
+                  >
+                    Coming soon
+                  </span>
+                </div>
                 <h3 className="mt-3 font-[family-name:var(--font-gona-display)] text-2xl font-bold">
                   {p.name}
                 </h3>
                 <p className="mt-1 text-sm text-[#5A6570]">{p.subtitle}</p>
                 <div className="mt-4">
-                  <FutureArt id={p.id} />
+                  <FutureArt id={p.id} accent={p.accent} soft={p.accentSoft} />
                 </div>
               </article>
             ))}
@@ -515,10 +658,21 @@ function SceneFuture() {
   }
 
   return (
-    <section ref={ref} className="relative bg-[#FAF9F6]">
+    <section
+      ref={ref}
+      className="relative bg-[#FAF9F6]"
+      style={
+        {
+          "--v4-product-accent": active.accent,
+          "--v4-product-soft": active.accentSoft,
+          "--v4-product-dark": active.accentDark,
+        } as CSSProperties
+      }
+    >
       <div className="h-[340vh]">
         <div className="sticky top-0 flex min-h-screen flex-col justify-center overflow-hidden py-16">
           <div className="mx-auto mb-10 w-full max-w-6xl px-5 sm:px-6">
+            <div className="v4-future-accent-bar mb-5" aria-hidden />
             <h2 className="font-[family-name:var(--font-gona-display)] text-4xl font-extrabold tracking-tight sm:text-5xl">
               WHAT WE&apos;RE
               <span className="mt-1 block">BUILDING NEXT.</span>
@@ -529,24 +683,7 @@ function SceneFuture() {
           </div>
           <motion.div ref={track} style={{ x }} className="flex gap-6 px-5 sm:px-6">
             {futureProducts.map((p, i) => (
-              <article
-                key={p.id}
-                className="w-[min(84vw,28rem)] shrink-0 rounded-[1.5rem] border border-[#111111]/1 bg-white p-6 shadow-[0_20px_50px_rgba(17,17,17,0.05)]"
-              >
-                <p className="text-xs font-bold tracking-[0.2em] text-[#8A7400] uppercase">
-                  {String(i + 2).padStart(2, "0")}
-                </p>
-                <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-3xl font-bold">
-                  {p.name}
-                </h3>
-                <p className="mt-2 text-sm text-[#5A6570]">{p.subtitle}</p>
-                <p className="mt-4 inline-flex rounded-full border border-[#111111]/1 px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] text-[#5A6570] uppercase">
-                  Coming soon
-                </p>
-                <div className="mt-6">
-                  <FutureArt id={p.id} />
-                </div>
-              </article>
+              <FuturePanel key={p.id} product={p} index={i} active={i === activeIdx} />
             ))}
           </motion.div>
         </div>
@@ -706,12 +843,20 @@ function SceneFamily() {
         <ul className="mt-12 divide-y divide-[#111111]/1 border-y border-[#111111]/1">
           {FAMILY.map((row) => {
             const available = row.status === "available";
+            const rowStyle = {
+              "--row-accent": row.accent,
+              "--row-soft": row.accentSoft,
+              "--row-dark": row.accentDark,
+            } as CSSProperties;
+
             const inner = (
               <div className="flex flex-col gap-2 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
                 <div className="flex items-baseline gap-4 sm:gap-6">
-                  <span className="font-mono text-xs text-[#8A7400]">{row.index}</span>
+                  <span className="v4-family-index font-mono text-xs text-[#8A7400]">
+                    {row.index}
+                  </span>
                   <div>
-                    <p className="font-[family-name:var(--font-gona-display)] text-xl font-bold sm:text-2xl">
+                    <p className="v4-family-category font-[family-name:var(--font-gona-display)] text-xl font-bold text-[#111111] sm:text-2xl">
                       {row.name}
                     </p>
                     <p className="mt-1 text-sm text-[#5A6570] opacity-100 sm:opacity-80">
@@ -720,8 +865,8 @@ function SceneFamily() {
                   </div>
                 </div>
                 <span
-                  className={`shrink-0 text-[0.65rem] font-bold tracking-[0.16em] uppercase ${
-                    available ? "text-[#8A7400]" : "text-[#5A6570]/70"
+                  className={`v4-family-badge shrink-0 text-[0.65rem] font-bold tracking-[0.16em] uppercase ${
+                    available ? "" : "text-[#5A6570]/70"
                   }`}
                 >
                   {available ? "Available now" : "Coming soon"}
@@ -734,8 +879,9 @@ function SceneFamily() {
                 <li key={row.id}>
                   <Link
                     href={row.href}
-                    className="v4-family-row block px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD400]"
+                    className="v4-family-row block px-1 pl-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD400]"
                     data-available="true"
+                    style={rowStyle}
                   >
                     {inner}
                   </Link>
@@ -745,7 +891,12 @@ function SceneFamily() {
 
             return (
               <li key={row.id}>
-                <div className="v4-family-row px-1" data-soon="true" aria-disabled>
+                <div
+                  className="v4-family-row px-1 pl-3"
+                  data-soon="true"
+                  aria-disabled
+                  style={rowStyle}
+                >
                   {inner}
                 </div>
               </li>
@@ -788,7 +939,8 @@ function SceneFinal() {
             <span className="mt-1 block">IS ALREADY RUNNING.</span>
           </h2>
           <p className="mt-5 text-sm font-bold tracking-wide">
-            GONA Cable · <span className="text-[#6B5A00]">AVAILABLE NOW</span>
+            GONA Cable ·{" "}
+            <span style={{ color: CABLE.accentDark }}>AVAILABLE NOW</span>
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <V4Cta href={cableSite.productPath} variant="black">

@@ -8,6 +8,9 @@
   --v4-yellow: #ffd400;
   --v4-mx: 50%;
   --v4-my: 40%;
+  --v4-product-accent: #6d4aff;
+  --v4-product-soft: #f1eeff;
+  --v4-product-dark: #241653;
   color: var(--v4-ink);
   background: var(--v4-ivory);
   overflow-x: clip;
@@ -86,21 +89,126 @@
 }
 
 .v4-family-row {
+  position: relative;
   transition:
     min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.35s ease,
     padding 0.35s ease;
 }
 
-.v4-family-row[data-available="true"]:hover,
-.v4-family-row[data-available="true"]:focus-within {
-  background: rgba(255, 212, 0, 0.1);
+.v4-family-row::before {
+  content: "";
+  position: absolute;
+  top: 28%;
+  bottom: 28%;
+  left: 0;
+  width: 2px;
+  border-radius: 1px;
+  background: transparent;
+  transition:
+    background-color 0.35s ease,
+    top 0.35s ease,
+    bottom 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.v4-family-index,
+.v4-family-badge,
+.v4-family-category {
+  transition: color 0.35s ease, background-color 0.35s ease, border-color 0.35s ease;
+}
+
+/* Cable AVAILABLE NOW — subtle always-on violet identity */
+.v4-family-row[data-available="true"]::before {
+  background: var(--row-accent, #6d4aff);
+  top: 22%;
+  bottom: 22%;
+  opacity: 0.55;
+}
+
+.v4-family-row[data-available="true"] .v4-family-badge {
+  color: var(--row-dark, #241653);
+  border: 1px solid color-mix(in srgb, var(--row-accent, #6d4aff) 28%, transparent);
+  background: var(--row-soft, #f1eeff);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
 }
 
 @media (pointer: fine) {
-  .v4-family-row[data-soon="true"]:hover {
-    background: rgba(17, 17, 17, 0.03);
+  .v4-family-row:hover::before,
+  .v4-family-row:focus-within::before {
+    background: var(--row-accent, #6d4aff);
+    top: 12%;
+    bottom: 12%;
+    opacity: 1;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--row-accent, #6d4aff) 35%, transparent);
   }
+
+  .v4-family-row:hover,
+  .v4-family-row:focus-within {
+    background: color-mix(in srgb, var(--row-soft, #f1eeff) 72%, transparent);
+  }
+
+  .v4-family-row:hover .v4-family-index,
+  .v4-family-row:focus-within .v4-family-index {
+    color: var(--row-dark, #241653);
+  }
+
+  .v4-family-row:hover .v4-family-category,
+  .v4-family-row:focus-within .v4-family-category {
+    color: var(--row-dark, #241653);
+  }
+
+  .v4-family-row[data-soon="true"]:hover .v4-family-badge,
+  .v4-family-row[data-soon="true"]:focus-within .v4-family-badge {
+    color: var(--row-dark, #241653);
+    border: 1px solid color-mix(in srgb, var(--row-accent, #6d4aff) 28%, transparent);
+    background: var(--row-soft, #f1eeff);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+  }
+}
+
+.v4-future-accent-bar {
+  height: 2px;
+  width: 4.5rem;
+  border-radius: 1px;
+  background: var(--v4-product-accent);
+  transition: background-color 0.4s ease;
+}
+
+.v4-future-panel {
+  transition:
+    border-color 0.4s ease,
+    background-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.v4-future-panel[data-active="true"] {
+  border-color: color-mix(in srgb, var(--panel-accent) 28%, transparent);
+  background: color-mix(in srgb, var(--panel-soft) 55%, white);
+  box-shadow: 0 20px 50px color-mix(in srgb, var(--panel-accent) 8%, transparent);
+}
+
+.v4-future-art {
+  transition: border-color 0.4s ease, background-color 0.4s ease;
+}
+
+.v4-cable-soft-surface {
+  background: color-mix(in srgb, var(--v4-product-soft, #f1eeff) 35%, #f3efe6);
+}
+
+.v4-cable-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--v4-product-accent, #6d4aff) 35%, transparent);
+  background: var(--v4-product-soft, #f1eeff);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--v4-product-dark, #241653);
 }
 
 .v4-progress-line {
