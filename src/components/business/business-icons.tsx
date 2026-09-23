@@ -57,13 +57,17 @@ export function BusinessProductIcon({
     case "industry":
       return (
         <Frame className={className}>
+          {/* Factory / production line abstraction */}
           <path
-            d="M8 36V20l10 6V20l10 6V14h12v22H8Z"
+            d="M6 36V22l8 5V18l9 6V12h14v24H6Z"
             stroke={accent}
             strokeWidth="1.75"
             strokeLinejoin="round"
           />
-          <path d="M34 18v-4M38 18v-6" stroke={accent} strokeWidth="1.75" strokeLinecap="round" />
+          <path d="M34 16v-5M38 16V8M42 16v-3" stroke={accent} strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M14 36v-4M22 36v-6M30 36v-3" stroke={accent} strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
+          <circle cx="18" cy="28" r="1.5" fill={accent} opacity="0.8" />
+          <circle cx="26" cy="26" r="1.5" fill={accent} opacity="0.8" />
         </Frame>
       );
     case "events":

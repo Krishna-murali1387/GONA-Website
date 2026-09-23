@@ -43,7 +43,8 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const isHome = pathname === "/";
-  const onDarkSurface = isHome;
+  const isBusinessImmersive = pathname === "/business";
+  const onDarkSurface = isHome || isBusinessImmersive;
   const onDarkHero = onDarkSurface && !scrolled && !open;
   const downloadTarget = downloadHref(pathname);
   const downloadExternal = isExternalHref(downloadTarget);

@@ -1,0 +1,67 @@
+/* Business V3 — spotlight + immersion helpers */
+
+.biz-v3-root {
+  --biz-mx: 50%;
+  --biz-my: 40%;
+  --biz-spot: 0;
+}
+
+.biz-v3-spotlight {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.biz-v3-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle 11rem at var(--biz-mx) var(--biz-my),
+    rgba(255, 212, 0, 0.14),
+    rgba(255, 255, 255, 0.04) 32%,
+    transparent 68%
+  );
+  opacity: var(--biz-spot, 1);
+  transition: opacity 0.35s ease;
+}
+
+@media (pointer: coarse) {
+  .biz-v3-spotlight::before {
+    opacity: 0;
+  }
+}
+
+.biz-v3-future-item {
+  opacity: 0.08;
+  filter: saturate(0.4);
+  transition:
+    opacity 0.45s ease,
+    filter 0.45s ease,
+    transform 0.45s ease;
+}
+
+.biz-v3-future-item[data-lit="true"] {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biz-v3-future-item {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .biz-v3-spotlight::before {
+    opacity: 0 !important;
+  }
+}
+
+.biz-v3-canvas-host canvas {
+  touch-action: none;
+}

@@ -1,4 +1,4 @@
-import { BusinessExperience } from "@/components/business/business-experience";
+import { BusinessV3Experience } from "@/components/business/immersive/business-v3-experience";
 import { businessSite } from "@/config/business.config";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -17,5 +17,5 @@ export const metadata = {
 };
 
 export default function BusinessPage() {
-  return <BusinessExperience />;
+  return <BusinessV3Experience />;
 }

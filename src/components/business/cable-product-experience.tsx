@@ -106,7 +106,10 @@ export function CableProductExperience() {
         />
         <div className="relative mx-auto max-w-6xl px-5 pt-28 pb-14 sm:px-6 sm:pb-16 lg:pt-32 lg:pb-20">
           <Reveal>
-            <div className="flex flex-wrap items-center gap-3">
+            <p className="text-[0.65rem] font-semibold tracking-[0.22em] text-[#8A7400]/80 uppercase">
+              GONA Business · Available now
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <p className="text-xs font-bold tracking-[0.32em] text-[#8A7400] uppercase">
                 {c.hero.eyebrow}
               </p>
