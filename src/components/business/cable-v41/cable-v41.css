@@ -1,0 +1,143 @@
+/* GONA Cable V4.1 — premium product experience */
+
+.cv41-root {
+  --cv-accent: #6d4aff;
+  --cv-soft: #f1eeff;
+  --cv-extra: #f8f6ff;
+  --cv-deep: #241653;
+  --cv-yellow: #ffd400;
+  --cv-ink: #111111;
+  --cv-muted: #5a6570;
+  color: var(--cv-ink);
+  background: var(--cv-extra);
+  overflow-x: clip;
+}
+
+.cv41-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--cv-deep);
+  transition: color 0.3s ease;
+}
+
+.cv41-back svg {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cv41-back:hover {
+  color: var(--cv-accent);
+}
+
+.cv41-back:hover svg {
+  transform: translateX(-4px);
+}
+
+.cv41-sticky {
+  border-bottom: 1px solid color-mix(in srgb, var(--cv-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--cv-extra) 88%, white);
+  backdrop-filter: blur(12px);
+}
+
+.cv41-lane-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 3%,
+    #000 97%,
+    transparent 100%
+  );
+}
+
+.cv41-lane-track {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.cv41-feature-card {
+  width: min(86vw, 20.5rem);
+  min-height: 13.5rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--card-accent, var(--cv-accent)) 16%, transparent);
+  box-shadow:
+    0 14px 36px color-mix(in srgb, var(--cv-deep) 6%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.cv41-feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--card-accent, var(--cv-accent));
+  opacity: 0.75;
+}
+
+@media (pointer: fine) {
+  .cv41-feature-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--card-accent, var(--cv-accent)) 38%, transparent);
+    box-shadow:
+      0 22px 44px color-mix(in srgb, var(--cv-deep) 10%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--card-accent, var(--cv-accent)) 12%, transparent);
+  }
+
+  .cv41-feature-card:hover .cv41-card-icon {
+    transform: translateY(-2px) scale(1.04);
+    background: color-mix(in srgb, var(--card-accent, var(--cv-accent)) 18%, white);
+  }
+}
+
+.cv41-card-icon {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.35s ease;
+}
+
+.cv41-doc {
+  border-radius: 1rem;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--cv-accent) 22%, transparent);
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--cv-deep) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv41-feature-card:hover {
+    transform: none;
+  }
+
+  .cv41-feature-card:hover .cv41-card-icon {
+    transform: none;
+  }
+}
+
+@keyframes cv41-rail {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.cv41-owner-rail {
+  animation: cv41-rail 36s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv41-owner-rail {
+    animation: none;
+  }
+}

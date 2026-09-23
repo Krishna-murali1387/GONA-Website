@@ -1,185 +1,398 @@
 import { cableSite } from "@/config/cable.config";
+import { businessSite, productColors } from "@/config/business.config";
+
+export const cableIdentity = {
+  accent: productColors.cable.accent,
+  soft: productColors.cable.accentSoft,
+  extraLight: "#F8F6FF",
+  deep: productColors.cable.accentDark,
+  white: "#FFFFFF",
+  yellow: "#FFD400",
+} as const;
+
+/** Feature-category accents inside Cable (not product identities). */
+export const cableFeatureAccent = {
+  customers: "#2563EB",
+  billing: "#059669",
+  collections: "#16A34A",
+  whatsapp: "#15803D",
+  email: "#2563EB",
+  complaints: "#EA580C",
+  team: "#4F46E5",
+  reports: "#1D4ED8",
+  devices: "#0891B2",
+  branding: "#C026D3",
+  import: "#D97706",
+  plans: "#4F46E5",
+  notices: "#6D4AFF",
+  dashboard: "#6D4AFF",
+  security: "#241653",
+} as const;
+
+export type FeatureCard = {
+  id: string;
+  title: string;
+  body: string;
+  accent: string;
+  tags?: readonly string[];
+  visual: "customers" | "connections" | "plans" | "devices" | "team" | "billing" | "dues" | "collections" | "cash" | "invoice" | "receipt" | "history" | "whatsapp" | "email" | "notices" | "complaints" | "support" | "dashboard" | "search360" | "reports" | "import" | "branding" | "secure";
+};
+
+export const cableFeatureLanes: ReadonlyArray<{
+  id: string;
+  label: string;
+  direction: "rtl" | "ltr";
+  cards: readonly FeatureCard[];
+}> = [
+  {
+    id: "operations",
+    label: "Operations",
+    direction: "rtl",
+    cards: [
+      {
+        id: "customers",
+        title: "Customers",
+        body: "Search and manage customer records with the identifiers your network already uses.",
+        accent: cableFeatureAccent.customers,
+        tags: ["Name", "Mobile", "Customer ID", "CAS ID", "STB", "Smart Card", "Status"],
+        visual: "customers",
+      },
+      {
+        id: "connections",
+        title: "Connections",
+        body: "Customer connection information and service details in one place.",
+        accent: cableFeatureAccent.devices,
+        visual: "connections",
+      },
+      {
+        id: "plans",
+        title: "Plans",
+        body: "Manage Cable plans associated with customer operations.",
+        accent: cableFeatureAccent.plans,
+        visual: "plans",
+      },
+      {
+        id: "devices",
+        title: "Devices",
+        body: "Track operational device information such as STB and Smart Card.",
+        accent: cableFeatureAccent.devices,
+        tags: ["STB", "Smart Card"],
+        visual: "devices",
+      },
+      {
+        id: "team",
+        title: "Team",
+        body: "Owner-managed team access. Operators create and use their own credentials.",
+        accent: cableFeatureAccent.team,
+        visual: "team",
+      },
+    ],
+  },
+  {
+    id: "billing",
+    label: "Billing & money",
+    direction: "ltr",
+    cards: [
+      {
+        id: "monthly-billing",
+        title: "Monthly Billing",
+        body: "Monthly customer billing workflow for each billing period.",
+        accent: cableFeatureAccent.billing,
+        visual: "billing",
+      },
+      {
+        id: "due-tracking",
+        title: "Due Tracking",
+        body: "See who is paid, part paid, due, or carrying outstanding balance.",
+        accent: cableFeatureAccent.billing,
+        tags: ["Paid", "Part Paid", "Due", "Outstanding"],
+        visual: "dues",
+      },
+      {
+        id: "collections",
+        title: "Collections",
+        body: "Record customer collections as CASH or UPI — no online payment gateway.",
+        accent: cableFeatureAccent.collections,
+        tags: ["CASH", "UPI"],
+        visual: "collections",
+      },
+      {
+        id: "operator-cash",
+        title: "Operator Cash",
+        body: "Operator cash handover and reconciliation workflow.",
+        accent: cableFeatureAccent.collections,
+        visual: "cash",
+      },
+      {
+        id: "invoices",
+        title: "Invoices",
+        body: "Generate professional customer invoice documents.",
+        accent: cableFeatureAccent.billing,
+        visual: "invoice",
+      },
+      {
+        id: "receipts",
+        title: "Receipts",
+        body: "Generate payment receipts after collections are recorded.",
+        accent: cableFeatureAccent.billing,
+        visual: "receipt",
+      },
+      {
+        id: "payment-history",
+        title: "Payment History",
+        body: "View recorded payment history for the customer.",
+        accent: cableFeatureAccent.billing,
+        visual: "history",
+      },
+    ],
+  },
+  {
+    id: "communication",
+    label: "Communication & service",
+    direction: "rtl",
+    cards: [
+      {
+        id: "whatsapp",
+        title: "WhatsApp",
+        body: "Manual WhatsApp deep-link communication for bills, reminders, confirmations, and notices.",
+        accent: cableFeatureAccent.whatsapp,
+        tags: ["Monthly bill", "Due reminder", "Payment confirmation", "Service notice"],
+        visual: "whatsapp",
+      },
+      {
+        id: "email",
+        title: "Email",
+        body: "Supported email for monthly bills, due reminders, and payment confirmation.",
+        accent: cableFeatureAccent.email,
+        tags: ["Monthly bill", "Due reminder", "Payment confirmation"],
+        visual: "email",
+      },
+      {
+        id: "notices",
+        title: "Notices",
+        body: "Publish important network and customer notices.",
+        accent: cableFeatureAccent.notices,
+        visual: "notices",
+      },
+      {
+        id: "complaints",
+        title: "Complaints",
+        body: "Customer service workflow from open through resolved.",
+        accent: cableFeatureAccent.complaints,
+        tags: ["Open", "Assigned", "Accepted", "In Progress", "Resolved"],
+        visual: "complaints",
+      },
+      {
+        id: "customer-support",
+        title: "Customer Support",
+        body: "Customer Portal support experience for issues and tracking.",
+        accent: cableFeatureAccent.complaints,
+        visual: "support",
+      },
+    ],
+  },
+  {
+    id: "management",
+    label: "Control & management",
+    direction: "ltr",
+    cards: [
+      {
+        id: "owner-dashboard",
+        title: "Owner Dashboard",
+        body: "Network-level operational overview for owners.",
+        accent: cableFeatureAccent.dashboard,
+        visual: "dashboard",
+      },
+      {
+        id: "customer-360",
+        title: "Customer 360",
+        body: "Search by Name, Mobile, Customer ID, CAS, STB, or Smart Card — then see the full picture.",
+        accent: cableFeatureAccent.customers,
+        tags: ["Collect", "WhatsApp", "Call"],
+        visual: "search360",
+      },
+      {
+        id: "reports",
+        title: "Reports",
+        body: "Operational reporting available to the owner.",
+        accent: cableFeatureAccent.reports,
+        visual: "reports",
+      },
+      {
+        id: "bulk-import",
+        title: "Bulk Import",
+        body: "CSV / XLSX customer import with preview and validation.",
+        accent: cableFeatureAccent.import,
+        visual: "import",
+      },
+      {
+        id: "branding",
+        title: "Branding",
+        body: "Network logo and banner for your Cable experiences.",
+        accent: cableFeatureAccent.branding,
+        visual: "branding",
+      },
+      {
+        id: "secure-access",
+        title: "Secure Access",
+        body: "Each Cable network operates in its own protected workspace.",
+        accent: cableFeatureAccent.security,
+        visual: "secure",
+      },
+    ],
+  },
+];
 
 export const cableProductCopy = {
+  backLabel: "Back to GONA Business",
+  backHref: businessSite.path,
   hero: {
-    eyebrow: "GONA CABLE",
+    eyebrow: "GONA BUSINESS / CABLE",
     badge: "AVAILABLE NOW",
-    headline: ["Your entire cable network.", "One professional system."],
+    headline: ["GONA CABLE"],
+    subtitle: "Cable Network Management",
     support:
-      "Manage customers, connections, billing, collections, operators, complaints and communication — while giving your customers their own digital portal.",
+      "Run customers, connections, billing, collections, teams and customer service from one connected Cable system.",
     primaryCta: "Register Your Network",
     secondaryCta: "Owner Sign In",
-    tertiaryCta: "Explore features",
+    tertiaryCta: "Explore the system",
+  },
+  core: {
+    heading: ["ONE CABLE NETWORK.", "THREE CONNECTED EXPERIENCES."],
+    roles: ["OWNER", "OPERATOR", "CUSTOMER"] as const,
+  },
+  features: {
+    id: "cable-features",
+    heading: ["EVERYTHING YOUR", "NETWORK NEEDS."],
+    support:
+      "From customer records to collections and support, GONA Cable brings everyday cable operations into one connected system.",
   },
   experiences: {
-    heading: ["One network.", "Three connected experiences."],
+    id: "cable-experiences",
+    heading: ["BUILT FOR EVERYONE", "IN THE NETWORK."],
     owner: {
-      title: "Run your entire network from one place.",
-      role: "OWNER WEB",
-      groups: [
-        {
-          title: "Network operations",
-          items: ["Overview", "Customers", "Connections", "Devices", "Plans"],
-        },
-        {
-          title: "Money & billing",
-          items: ["Billing", "Collections", "Reports", "Subscription"],
-        },
-        {
-          title: "People & service",
-          items: ["Team", "Complaints", "Notices", "Communications"],
-        },
-        {
-          title: "Identity",
-          items: ["Network branding", "Settings"],
-        },
-      ],
+      id: "cable-owner",
+      label: "OWNER",
+      heading: ["CONTROL THE NETWORK", "FROM ONE PLACE."],
+      support:
+        "Run network operations, money, people and identity from one Owner web workspace.",
+      areas: [
+        "Customers",
+        "Connections",
+        "Billing",
+        "Collections",
+        "Plans",
+        "Devices",
+        "Team",
+        "Complaints",
+        "Reports",
+        "Notices",
+        "Communications",
+        "Branding",
+        "Subscription",
+        "Settings",
+      ] as const,
     },
     operator: {
-      title: "Built for your team in the field.",
-      role: "OPERATOR MOBILE",
-      items: [
-        "Mobile-friendly workspace",
-        "Customer search & details",
-        "Check dues and collect payments",
-        "Complaints handling",
-        "My Cash and cash handover",
-        "Call customer",
-        "Manual WhatsApp where supported",
-        "Access limited by owner-assigned capabilities",
-      ],
+      id: "cable-operator",
+      label: "OPERATOR",
+      heading: ["BUILT FOR WORK", "IN THE FIELD."],
+      support:
+        "A mobile-friendly Operator workspace for customer lookup, dues, collections, complaints and cash handover — with access limited by owner-assigned capabilities.",
+      areas: ["Home", "Customers", "Collect", "Complaints", "More", "My Cash", "Notices"] as const,
     },
     customer: {
-      title: "Give every customer their own digital space.",
-      role: "CUSTOMER PORTAL",
-      note: "Web access for customers — not a separate Cable mobile app.",
-      items: [
-        "Customer login",
-        "Connection details and current plan",
-        "Bills and payment history",
-        "Notices from your network",
-        "Report an issue and track complaints",
-        "Network banners",
-        "Profile",
-        "GONA platform advertisements where applicable",
-      ],
+      id: "cable-customer",
+      label: "CUSTOMER PORTAL",
+      heading: ["A DIGITAL SPACE", "FOR EVERY CUSTOMER."],
+      support:
+        "A web Customer Portal — not a separate Cable mobile app — for bills, connection details, notices, support and profile.",
+      areas: ["Home", "Bills", "Connection", "Support", "Profile", "Notices"] as const,
+      note: "Customer Portal = WEB EXPERIENCE.",
     },
   },
-  search360: {
-    heading: "Find any customer in seconds.",
-    support: "Search across the identifiers your network already uses.",
-    searchBy: [
-      "Customer Name",
-      "Mobile Number",
-      "Customer ID",
-      "CAS ID",
-      "STB Number",
-      "Smart Card Number",
-    ],
-    view: ["Status", "Plan", "Connection", "Devices", "Due", "Paid", "Payment history"],
-    actions: ["Collect", "WhatsApp", "Call"],
-  },
-  billing: {
-    heading: ["Know who paid.", "Know who owes."],
-    support:
-      "Monthly billing and collections for real field operations — recorded as CASH or UPI by your team. No online payment gateway in GONA Cable V1.",
-    items: [
-      "Monthly billing and current billing period",
-      "Bill status: Paid, Part Paid, Due",
-      "Outstanding balances",
-      "Record manual CASH payment",
-      "Record manual UPI payment",
-      "Payment allocation and receipts",
-      "Payment history",
-      "Operator cash accountability",
-      "Cash handover and reconciliation",
-    ],
+  documents: {
+    id: "cable-documents",
+    heading: ["FROM COLLECTION", "TO DOCUMENT."],
+    flow: ["COLLECTION RECORDED", "RECEIPT", "INVOICE / BILLING DOCUMENT"] as const,
   },
   communications: {
-    heading: "Keep customers informed.",
+    id: "cable-comms",
+    heading: ["KEEP CUSTOMERS", "INFORMED."],
     channels: [
       {
         title: "WhatsApp",
-        body: "Manual communication using WhatsApp deep links — monthly bill, payment reminder, payment confirmation, service notice, or a custom message. Your team opens WhatsApp; GONA does not auto-send or track WhatsApp delivery.",
+        body: "Manual communication using WhatsApp deep links — monthly bill, due reminder, payment confirmation, service notice, or a custom message. Your team opens WhatsApp; GONA does not auto-send WhatsApp messages.",
       },
       {
         title: "Email",
-        body: "Monthly bill emails, payment due reminders, and payment confirmation after qualifying payments — with delivery status and history in Cable.",
+        body: "Supported email for monthly bills, due reminders, and payment confirmation — with delivery status and history in Cable.",
       },
       {
         title: "Notices",
-        body: "Owner-published customer notices for maintenance, network interruptions, channel or service updates, and important announcements.",
+        body: "Owner-published customer notices for maintenance, interruptions, service updates, and important announcements.",
       },
     ],
   },
-  documents: {
-    heading: "Professional billing documents.",
-    items: ["Invoice PDF", "Receipt PDF", "Secure document access and download"],
-  },
-  team: {
-    heading: ["Your team.", "The right access."],
-    items: [
-      "Owner invites Operators",
-      "Operators create their own password and account",
-      "Role and capability-based access",
-      "Owner never needs to create or know Operator passwords",
-      "Field-friendly mobile experience",
-    ],
+  search360: {
+    id: "cable-360",
+    heading: ["FIND THE CUSTOMER.", "SEE THE WHOLE PICTURE."],
+    placeholders: [
+      "Name",
+      "Mobile",
+      "Customer ID",
+      "CAS",
+      "STB",
+      "Smart Card",
+    ] as const,
+    view: ["Status", "Plan", "Devices", "Due / Paid", "Payment history"] as const,
+    actions: ["Collect", "WhatsApp", "Call"] as const,
   },
   complaints: {
+    id: "cable-complaints",
     heading: "From complaint to resolution.",
-    stages: ["Open", "Assigned", "Accepted", "In Progress", "Resolved"],
+    stages: ["Open", "Assigned", "Accepted", "In Progress", "Resolved"] as const,
   },
-  branding: {
-    heading: ["Your network.", "Your identity."],
-    support:
-      "Owners can add a network logo and banner so branding appears appropriately through Cable experiences — while remaining part of the GONA Business software family.",
-  },
-  reports: {
-    heading: "See your network clearly.",
-    support:
-      "Owner reports and overview visibility for collections, outstanding dues, and operational periods — so you can see the network clearly without inventing forecasts that are not part of the product.",
-  },
-  import: {
-    heading: "Move your existing customer records without starting over.",
-    items: [
-      "CSV and Excel import",
-      "Preview and validation before commit",
-      "Supports customer and connection data including relevant device identifiers",
-    ],
-    note: "Does not claim migration from every third-party cable system.",
+  trio: {
+    id: "cable-ops",
+    import: {
+      title: "Bulk Import",
+      body: "CSV / XLSX customer import with preview and validation.",
+    },
+    branding: {
+      title: "Branding",
+      body: "Network logo and banner for your Cable experiences.",
+    },
+    reports: {
+      title: "Reports",
+      body: "Operational visibility for owners across collections and dues.",
+    },
   },
   security: {
-    heading: "Your network stays your network.",
-    items: [
-      "Each Cable Network has its own workspace",
-      "Owner and Operator access is controlled",
-      "Customers only see their own portal information",
-      "Cable business data is separate from consumer GONA service locations",
-      "GONA Super Admin approval before network activation",
-    ],
+    id: "cable-security",
+    heading: ["YOUR NETWORK.", "YOUR TEAM.", "YOUR DATA."],
+    support:
+      "Each Cable network operates in its own protected workspace. Owner and Operator access is controlled. Customers only see their own portal information.",
   },
   onboarding: {
+    id: "cable-start",
     heading: "Getting started is simple.",
     steps: [
-      "Register your network",
-      "Verify your email",
-      "Submit your business and network details",
-      "GONA reviews and approves your network",
-      "Set up customers, plans and team",
-      "Start operating",
-    ],
+      { n: "01", title: "Register your network" },
+      { n: "02", title: "GONA reviews your registration" },
+      { n: "03", title: "Sign in with your approved account" },
+      { n: "04", title: "Set up your network and team" },
+    ] as const,
   },
   closing: {
-    eyebrow: "GONA CABLE",
-    headline: ["Ready to bring your cable network", "into one professional system?"],
+    eyebrow: "GONA BUSINESS",
+    headline: ["READY TO RUN YOUR", "CABLE NETWORK", "DIFFERENTLY?"],
     primaryCta: "Register Your Network",
     secondaryCta: "Owner Sign In",
-    note: "Already approved? Sign in with your existing GONA account.",
   },
   links: {
     register: cableSite.registerPath,
     portal: cableSite.portalUrl,
-    featuresId: "cable-features",
+    business: businessSite.path,
   },
 } as const;
