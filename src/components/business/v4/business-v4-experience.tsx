@@ -498,26 +498,18 @@ function SceneConnected() {
   );
 }
 
-function FutureArt({
-  id,
-  accent,
-  soft,
-  active = true,
-}: {
-  id: FutureProductId;
-  accent: string;
-  soft: string;
-  active?: boolean;
-}) {
+function FutureArt({ id }: { id: FutureProductId }) {
   return (
-    <div
-      className="v4-future-art flex h-40 items-center justify-center rounded-2xl border"
-      style={{
-        borderColor: active ? `${accent}40` : "rgba(17, 17, 17, 0.08)",
-        background: active ? soft : "#ffffff",
-      }}
-    >
-      <BusinessProductIcon id={id} className="h-16 w-16" accent={active ? accent : "#111111"} />
+    <div className="v4-future-art relative mt-auto flex h-44 items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/[0.08]">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          background:
+            "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 55%)",
+        }}
+        aria-hidden
+      />
+      <BusinessProductIcon id={id} className="relative h-20 w-20 sm:h-24 sm:w-24" accent="rgba(255,255,255,0.92)" />
     </div>
   );
 }
@@ -525,169 +517,146 @@ function FutureArt({
 function FuturePanel({
   product,
   index,
-  active,
+  layout = "marquee",
 }: {
   product: (typeof futureProducts)[number];
   index: number;
-  active: boolean;
+  layout?: "marquee" | "stack";
 }) {
+  const label = String(index + 2).padStart(2, "0");
+  const widthClass =
+    layout === "stack"
+      ? "w-full max-w-xl"
+      : "w-[min(78vw,26rem)] shrink-0 sm:w-[26rem]";
   return (
     <article
-      className="v4-future-panel w-[min(84vw,28rem)] shrink-0 rounded-[1.5rem] border border-[#111111]/1 bg-white p-6 shadow-[0_20px_50px_rgba(17,17,17,0.05)]"
-      data-active={active ? "true" : "false"}
+      className={`v4-future-panel relative flex flex-col overflow-hidden rounded-[1.5rem] p-6 sm:p-8 ${widthClass}`}
       style={
         {
           "--panel-accent": product.accent,
-          "--panel-soft": product.accentSoft,
           "--panel-dark": product.accentDark,
+          background: `radial-gradient(ellipse 100% 80% at 12% -10%, color-mix(in srgb, #ffffff 22%, ${product.accent}), transparent 52%), linear-gradient(165deg, color-mix(in srgb, #ffffff 10%, ${product.accent}) 0%, ${product.accent} 42%, color-mix(in srgb, ${product.accentDark} 55%, ${product.accent}) 100%)`,
         } as CSSProperties
       }
     >
-      <div className="flex items-center gap-3">
-        <p
-          className="text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300"
-          style={{ color: active ? product.accentDark : "#8A7400" }}
-        >
-          {String(index + 2).padStart(2, "0")}
-        </p>
-        <span
-          className="h-0.5 w-8 rounded-full transition-colors duration-300"
-          style={{ background: active ? product.accent : "rgba(17,17,17,0.12)" }}
-          aria-hidden
-        />
-      </div>
-      <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-3xl font-bold">
+      <span
+        className="pointer-events-none absolute top-3 right-4 font-[family-name:var(--font-gona-display)] text-7xl font-extrabold leading-none text-white/[0.08] select-none sm:text-8xl"
+        aria-hidden
+      >
+        {label}
+      </span>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 opacity-50"
+        style={{
+          background: `linear-gradient(to top, color-mix(in srgb, ${product.accentDark} 45%, transparent), transparent)`,
+        }}
+        aria-hidden
+      />
+
+      <p className="relative text-xs font-bold tracking-[0.28em] text-white/70 uppercase">{label}</p>
+      <h3 className="relative mt-4 font-[family-name:var(--font-gona-display)] text-3xl leading-[1.05] font-extrabold tracking-tight text-white sm:text-4xl">
         {product.name}
       </h3>
-      <p className="mt-2 text-sm text-[#5A6570]">{product.subtitle}</p>
-      <p
-        className="mt-4 inline-flex rounded-full border px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase transition-colors duration-300"
-        style={{
-          color: active ? product.accentDark : "#5A6570",
-          borderColor: active ? `${product.accent}40` : "rgba(17,17,17,0.1)",
-          background: active ? product.accentSoft : "transparent",
-        }}
-      >
+      <p className="relative mt-3 max-w-[16rem] text-sm leading-relaxed text-white/85">{product.subtitle}</p>
+      <p className="relative mt-5 inline-flex w-fit rounded-full border border-white/25 bg-white/12 px-3 py-1 text-[0.65rem] font-bold tracking-[0.18em] text-white/95 uppercase backdrop-blur-[2px]">
         Coming soon
       </p>
-      <div className="mt-6">
-        <FutureArt id={product.id} accent={product.accent} soft={product.accentSoft} active={active} />
+      <div className="relative mt-8">
+        <FutureArt id={product.id} />
       </div>
     </article>
   );
 }
 
+function FutureStaticStack() {
+  return (
+    <div className="mt-10 space-y-5">
+      {futureProducts.map((p, i) => (
+        <FuturePanel key={p.id} product={p} index={i} layout="stack" />
+      ))}
+    </div>
+  );
+}
+
 function SceneFuture() {
-  const ref = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const mobile = useIsMobileLayout();
   const reduced = usePrefersReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-72%"]);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const hoveringRef = useRef(false);
+  const offsetRef = useRef(0);
 
   useEffect(() => {
-    if (mobile || reduced) return;
-    return scrollYProgress.on("change", (v) => {
-      const n = futureProducts.length;
-      const idx = Math.min(n - 1, Math.max(0, Math.floor(v * n + 0.001)));
-      setActiveIdx(idx);
-    });
-  }, [scrollYProgress, mobile, reduced]);
+    if (reduced) return;
+    const track = trackRef.current;
+    if (!track) return;
 
-  const active = futureProducts[activeIdx] ?? futureProducts[0];
+    let raf = 0;
+    let last = performance.now();
 
-  if (mobile || reduced) {
-    return (
-      <section className="bg-[#FAF9F6] py-20">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-5xl">
-            WHAT WE&apos;RE
-            <span className="mt-1 block">BUILDING NEXT.</span>
-          </h2>
-          <p className="mt-3 text-sm text-[#5A6570]">
-            The GONA Business family is just beginning.
-          </p>
-          <div className="mt-10 space-y-6">
-            {futureProducts.map((p, i) => (
-              <article
-                key={p.id}
-                className="v4-future-panel rounded-2xl border border-[#111111]/8 bg-white p-5"
-                data-active="true"
-                style={
-                  {
-                    "--panel-accent": p.accent,
-                    "--panel-soft": p.accentSoft,
-                  } as CSSProperties
-                }
-              >
-                <div className="flex flex-wrap items-center gap-3">
-                  <p
-                    className="text-xs font-bold tracking-[0.2em] uppercase"
-                    style={{ color: p.accentDark }}
-                  >
-                    {String(i + 2).padStart(2, "0")}
-                  </p>
-                  <span
-                    className="inline-flex rounded-full border px-3 py-1 text-[0.65rem] font-bold tracking-[0.16em] uppercase"
-                    style={{
-                      color: p.accentDark,
-                      borderColor: `${p.accent}40`,
-                      background: p.accentSoft,
-                    }}
-                  >
-                    Coming soon
-                  </span>
-                </div>
-                <h3 className="mt-3 font-[family-name:var(--font-gona-display)] text-2xl font-bold">
-                  {p.name}
-                </h3>
-                <p className="mt-1 text-sm text-[#5A6570]">{p.subtitle}</p>
-                <div className="mt-4">
-                  <FutureArt id={p.id} accent={p.accent} soft={p.accentSoft} />
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
+    const tick = (now: number) => {
+      const dt = Math.min(0.048, (now - last) / 1000);
+      last = now;
+
+      const mobile = window.matchMedia("(max-width: 767px)").matches;
+      // ~one panel through focus every ~4s desktop / ~5.5s mobile
+      const basePxPerSec = mobile ? 78 : 112;
+      const speed = basePxPerSec * (hoveringRef.current && !mobile ? 0.52 : 1);
+
+      offsetRef.current -= speed * dt;
+      const half = track.scrollWidth / 2;
+      if (half > 0 && -offsetRef.current >= half) {
+        offsetRef.current += half;
+      }
+      track.style.transform = `translate3d(${offsetRef.current}px, 0, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [reduced]);
+
+  const loopItems = [...futureProducts, ...futureProducts];
 
   return (
-    <section
-      ref={ref}
-      className="relative bg-[#FAF9F6]"
-      style={
-        {
-          "--v4-product-accent": active.accent,
-          "--v4-product-soft": active.accentSoft,
-          "--v4-product-dark": active.accentDark,
-        } as CSSProperties
-      }
-    >
-      <div className="h-[340vh]">
-        <div className="sticky top-0 flex min-h-screen flex-col justify-center overflow-hidden py-16">
-          <div className="mx-auto mb-10 w-full max-w-6xl px-5 sm:px-6">
-            <div className="v4-future-accent-bar mb-5" aria-hidden />
-            <h2 className="font-[family-name:var(--font-gona-display)] text-4xl font-extrabold tracking-tight sm:text-5xl">
-              WHAT WE&apos;RE
-              <span className="mt-1 block">BUILDING NEXT.</span>
-            </h2>
-            <p className="mt-3 text-sm text-[#5A6570]">
-              The GONA Business family is just beginning.
-            </p>
-          </div>
-          <motion.div ref={track} style={{ x }} className="flex gap-6 px-5 sm:px-6">
-            {futureProducts.map((p, i) => (
-              <FuturePanel key={p.id} product={p} index={i} active={i === activeIdx} />
-            ))}
-          </motion.div>
-        </div>
+    <section className="v4-future-section overflow-x-clip bg-[#FAF9F6] py-20 sm:py-28">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-5xl">
+          WHAT WE&apos;RE
+          <span className="mt-1 block">BUILDING NEXT.</span>
+        </h2>
+        <p className="mt-3 text-sm text-[#5A6570]">The GONA Business family is just beginning.</p>
       </div>
+
+      {reduced ? (
+        <div className="mx-auto mt-2 max-w-6xl px-5 sm:px-6">
+          <FutureStaticStack />
+        </div>
+      ) : (
+        <div
+          className="v4-future-showcase mt-10"
+          onPointerEnter={() => {
+            hoveringRef.current = true;
+          }}
+          onPointerLeave={() => {
+            hoveringRef.current = false;
+          }}
+        >
+          <div className="v4-future-mask">
+            <div
+              ref={trackRef}
+              className="v4-future-track flex w-max gap-5 will-change-transform sm:gap-6"
+              aria-label="GONA Business software products coming soon"
+            >
+              {loopItems.map((p, i) => (
+                <FuturePanel
+                  key={`${p.id}-${i < futureProducts.length ? "a" : "b"}`}
+                  product={p}
+                  index={i % futureProducts.length}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

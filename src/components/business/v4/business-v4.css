@@ -169,29 +169,86 @@
   }
 }
 
-.v4-future-accent-bar {
-  height: 2px;
-  width: 4.5rem;
-  border-radius: 1px;
-  background: var(--v4-product-accent);
-  transition: background-color 0.4s ease;
+.v4-future-section {
+  position: relative;
+}
+
+.v4-future-showcase {
+  position: relative;
+  width: 100%;
+}
+
+.v4-future-mask {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 4%,
+    #000 96%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 4%,
+    #000 96%,
+    transparent 100%
+  );
+}
+
+.v4-future-track {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .v4-future-track {
+    padding-inline: 1.5rem;
+  }
 }
 
 .v4-future-panel {
+  min-height: 28rem;
+  box-shadow:
+    0 22px 50px color-mix(in srgb, var(--panel-dark, #111) 28%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 color-mix(in srgb, var(--panel-dark, #111) 35%, transparent);
   transition:
-    border-color 0.4s ease,
-    background-color 0.4s ease,
-    box-shadow 0.4s ease;
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
 }
 
-.v4-future-panel[data-active="true"] {
-  border-color: color-mix(in srgb, var(--panel-accent) 28%, transparent);
-  background: color-mix(in srgb, var(--panel-soft) 55%, white);
-  box-shadow: 0 20px 50px color-mix(in srgb, var(--panel-accent) 8%, transparent);
+@media (pointer: fine) {
+  .v4-future-panel:hover {
+    transform: translateY(-4px) scale(1.012);
+    box-shadow:
+      0 28px 56px color-mix(in srgb, var(--panel-dark, #111) 34%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  .v4-future-panel:hover .v4-future-art svg {
+    transform: translateY(-3px) scale(1.04);
+  }
+}
+
+.v4-future-art svg {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .v4-future-art {
-  transition: border-color 0.4s ease, background-color 0.4s ease;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v4-future-panel:hover {
+    transform: none;
+  }
+
+  .v4-future-panel:hover .v4-future-art svg {
+    transform: none;
+  }
 }
 
 .v4-cable-soft-surface {
