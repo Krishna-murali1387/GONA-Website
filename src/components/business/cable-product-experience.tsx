@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 import {
   BizSecondaryCta,
@@ -10,6 +11,59 @@ import {
   SoftWindow,
 } from "@/components/business/business-ui";
 import { cableProductCopy } from "@/config/cable-product.config";
+
+const CABLE_NAV = [
+  { id: "cable-overview", label: "Overview" },
+  { id: "cable-features", label: "Owner" },
+  { id: "cable-operator", label: "Operator" },
+  { id: "cable-customer", label: "Customer" },
+  { id: "cable-billing", label: "Billing" },
+  { id: "cable-comms", label: "Communication" },
+  { id: "cable-ops", label: "Operations" },
+  { id: "cable-start", label: "Get Started" },
+] as const;
+
+function CableStickyNav() {
+  const [active, setActive] = useState<string>(CABLE_NAV[0].id);
+
+  useEffect(() => {
+    const els = CABLE_NAV.map((n) => document.getElementById(n.id)).filter(Boolean) as HTMLElement[];
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target?.id) setActive(visible.target.id);
+      },
+      { rootMargin: "-25% 0px -55% 0px", threshold: [0.1, 0.4, 0.7] },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <nav
+      aria-label="Cable product sections"
+      className="sticky top-16 z-30 border-b border-[#111111]/8 bg-[#FAF8F5]/95 backdrop-blur-md md:top-[4.5rem]"
+    >
+      <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+        {CABLE_NAV.map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD400] ${
+              active === item.id
+                ? "bg-[#111111] text-[#FFD400]"
+                : "text-[#5A6570] hover:bg-[#111111]/5 hover:text-[#111111]"
+            }`}
+          >
+            {item.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  );
+}
 
 function TripleExperienceVisual() {
   return (
@@ -71,7 +125,7 @@ function SectionShell({
           ? "bg-[#141414] text-white"
           : "bg-[#FAF8F5]";
   return (
-    <section id={id} className={`border-b border-[#111111]/6 ${bg}`}>
+    <section id={id} className={`scroll-mt-28 border-b border-[#111111]/6 ${bg}`}>
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16 lg:py-20">{children}</div>
     </section>
   );
@@ -95,8 +149,9 @@ export function CableProductExperience() {
 
   return (
     <main className="overflow-x-hidden bg-[#FAF8F5] text-[#111111]">
+      <CableStickyNav />
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-[#111111]/6 bg-white">
+      <section id="cable-overview" className="relative scroll-mt-28 overflow-hidden border-b border-[#111111]/6 bg-white">
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -200,7 +255,7 @@ export function CableProductExperience() {
 
           {/* Operator */}
           <Reveal>
-            <div className="grid items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+            <div id="cable-operator" className="scroll-mt-28 grid items-start gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
               <SoftWindow title="Operator field workspace" tone="field" className="order-2 lg:order-1">
                 <div className="mx-auto max-w-[14rem] space-y-2.5">
                   {["Customer search", "Check dues", "Collect", "Complaints", "My Cash"].map(
@@ -231,7 +286,7 @@ export function CableProductExperience() {
 
           {/* Customer */}
           <Reveal>
-            <div className="grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+            <div id="cable-customer" className="scroll-mt-28 grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
               <div>
                 <LabelChip>{c.experiences.customer.role}</LabelChip>
                 <h3 className="mt-4 font-[family-name:var(--font-gona-display)] text-2xl font-bold tracking-tight sm:text-3xl">
@@ -300,7 +355,7 @@ export function CableProductExperience() {
       </SectionShell>
 
       {/* Billing */}
-      <SectionShell tone="soft">
+      <SectionShell id="cable-billing" tone="soft">
         <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <Reveal>
             <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -331,7 +386,7 @@ export function CableProductExperience() {
       </SectionShell>
 
       {/* Communications */}
-      <SectionShell tone="white">
+      <SectionShell id="cable-comms" tone="white">
         <Reveal>
           <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-4xl">
             {c.communications.heading}
@@ -368,7 +423,7 @@ export function CableProductExperience() {
       </SectionShell>
 
       {/* Team */}
-      <SectionShell tone="white">
+      <SectionShell id="cable-ops" tone="white">
         <div className="grid gap-8 lg:grid-cols-2">
           <Reveal>
             <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-4xl">
@@ -461,7 +516,7 @@ export function CableProductExperience() {
       </SectionShell>
 
       {/* Onboarding */}
-      <SectionShell tone="soft">
+      <SectionShell id="cable-start" tone="soft">
         <Reveal>
           <h2 className="font-[family-name:var(--font-gona-display)] text-3xl font-extrabold tracking-tight sm:text-4xl">
             {c.onboarding.heading}

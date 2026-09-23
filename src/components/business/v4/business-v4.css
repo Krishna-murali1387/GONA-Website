@@ -1,0 +1,109 @@
+/* GONA Business V4 — motion-led corporate experience */
+
+.v4-root {
+  --v4-ivory: #faf9f6;
+  --v4-ink: #111111;
+  --v4-graphite: #181818;
+  --v4-muted: #5a6570;
+  --v4-yellow: #ffd400;
+  --v4-mx: 50%;
+  --v4-my: 40%;
+  color: var(--v4-ink);
+  background: var(--v4-ivory);
+  overflow-x: clip;
+}
+
+.v4-mask-line {
+  display: block;
+  overflow: hidden;
+}
+
+.v4-mask-line > span {
+  display: block;
+  transform: translateY(110%);
+}
+
+.v4-mask-line[data-in="true"] > span {
+  transform: translateY(0);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.v4-belt {
+  display: flex;
+  width: max-content;
+  gap: 2.5rem;
+  animation: v4-belt 48s linear infinite;
+  white-space: nowrap;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(17, 17, 17, 0.18);
+}
+
+.v4-belt span[data-solid="true"] {
+  color: rgba(17, 17, 17, 0.12);
+  -webkit-text-stroke: 0;
+}
+
+@keyframes v4-belt {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v4-belt {
+    animation: none;
+  }
+
+  .v4-mask-line > span {
+    transform: none !important;
+  }
+}
+
+.v4-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 28rem at var(--v4-mx) var(--v4-my),
+    rgba(255, 212, 0, 0.07),
+    transparent 65%
+  );
+  opacity: 0.9;
+}
+
+@media (pointer: coarse) {
+  .v4-ambient {
+    opacity: 0;
+  }
+}
+
+.v4-family-row {
+  transition:
+    min-height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s ease,
+    padding 0.35s ease;
+}
+
+.v4-family-row[data-available="true"]:hover,
+.v4-family-row[data-available="true"]:focus-within {
+  background: rgba(255, 212, 0, 0.1);
+}
+
+@media (pointer: fine) {
+  .v4-family-row[data-soon="true"]:hover {
+    background: rgba(17, 17, 17, 0.03);
+  }
+}
+
+.v4-progress-line {
+  transform-origin: top;
+  transform: scaleY(var(--v4-progress, 0));
+}
