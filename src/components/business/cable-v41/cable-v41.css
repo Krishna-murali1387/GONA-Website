@@ -13,27 +13,14 @@
   overflow-x: clip;
 }
 
-.cv41-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--cv-deep);
-  transition: color 0.3s ease;
+.cv41-nav-back {
+  color: #6d4aff;
+  background: transparent;
 }
 
-.cv41-back svg {
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.cv41-back:hover {
-  color: var(--cv-accent);
-}
-
-.cv41-back:hover svg {
-  transform: translateX(-4px);
+.cv41-nav-back:hover {
+  color: #241653;
+  background: color-mix(in srgb, #6d4aff 8%, transparent);
 }
 
 .cv41-sticky {

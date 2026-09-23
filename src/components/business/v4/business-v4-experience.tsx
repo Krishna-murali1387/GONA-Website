@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-import { HeroProductComposition } from "@/components/business/v4/hero-composition";
 import { SoftFrame, V4Cta } from "@/components/business/v4/v4-ui";
 import {
   clamp01,
@@ -78,14 +77,24 @@ function MaskedLines({
 }
 
 function TextBelt() {
-  const items = ["BUSINESS", "OPERATIONS", "PEOPLE", "CUSTOMERS", "MONEY", "GROWTH"];
+  const items = [
+    { word: "BUSINESS", color: "#6D4AFF" },
+    { word: "OPERATIONS", color: "#334155" },
+    { word: "PEOPLE", color: "#B45309" },
+    { word: "CUSTOMERS", color: "#0F766E" },
+    { word: "MONEY", color: "#7C3AED" },
+    { word: "GROWTH", color: "#15803D" },
+  ] as const;
   const row = [...items, ...items];
   return (
     <div className="overflow-hidden border-y border-[#111111]/8 bg-[#FAF9F6] py-5" aria-hidden>
       <div className="v4-belt">
-        {row.map((t, i) => (
-          <span key={`${t}-${i}`} data-solid={i % 2 === 0 ? "true" : undefined}>
-            {t} ·
+        {row.map((item, i) => (
+          <span key={`${item.word}-${i}`} className="v4-belt-item">
+            <span className="v4-belt-word" style={{ color: item.color }}>
+              {item.word}
+            </span>
+            <span className="v4-belt-sep"> ·</span>
           </span>
         ))}
       </div>
@@ -102,20 +111,32 @@ function SceneHero() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#FAF9F6] pt-28 pb-10 sm:pt-32 sm:pb-14">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-        <div>
+    <section className="v4-hero relative overflow-hidden bg-[#FAF9F6] pt-28 pb-12 sm:pt-32 sm:pb-16">
+      <div className="v4-hero-bg" aria-hidden>
+        <Image
+          src="/images/business/gona-business-hero-final.png"
+          alt=""
+          fill
+          priority
+          className="v4-hero-bg-img"
+          sizes="100vw"
+        />
+      </div>
+      <div className="v4-hero-readability" aria-hidden />
+
+      <div className="v4-hero-content relative z-10 mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="max-w-xl lg:max-w-[min(100%,28rem)] xl:max-w-[min(100%,30rem)]">
           <p className="text-xs font-bold tracking-[0.32em] text-[#8A7400] uppercase">
             GONA BUSINESS
           </p>
           <MaskedLines
             active={ready}
-            className="mt-5 max-w-xl font-[family-name:var(--font-gona-display)] text-[2.2rem] leading-[1.05] font-extrabold tracking-tight text-[#111111] sm:text-5xl lg:text-[3.4rem]"
+            className="mt-5 font-[family-name:var(--font-gona-display)] text-[2.2rem] leading-[1.05] font-extrabold tracking-tight text-[#111111] sm:text-5xl lg:text-[3.4rem]"
             lines={["WE BUILD SOFTWARE", "AROUND THE WAY", "BUSINESSES ACTUALLY WORK."]}
           />
           <p className="mt-6 max-w-lg text-base leading-relaxed text-[#5A6570] sm:text-lg">
-            From cable networks to the businesses we&apos;re building for next — GONA turns everyday
-            operations into simpler, connected software.
+            From cable networks to the industries we&apos;re building software for next — GONA turns
+            everyday operations into simpler, connected systems.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <V4Cta href="#our-software" variant="yellow">
@@ -128,9 +149,6 @@ function SceneHero() {
           <p className="mt-6 text-xs font-semibold tracking-[0.16em] text-[#111111]/35 uppercase">
             Built by GONA TECHNOLOGIES
           </p>
-        </div>
-        <div className="hidden lg:block">
-          <HeroProductComposition animateIn={ready} />
         </div>
       </div>
     </section>

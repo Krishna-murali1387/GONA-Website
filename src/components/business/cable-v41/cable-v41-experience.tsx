@@ -25,27 +25,6 @@ const NAV = [
   { id: "cable-start", label: "Get Started" },
 ] as const;
 
-function BackToBusiness({ className = "" }: { className?: string }) {
-  return (
-    <Link
-      href={c.backHref}
-      className={`cv41-back focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD400] ${className}`}
-      aria-label="Back to GONA Business"
-    >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-        <path
-          d="M10 3L5 8l5 5"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      {c.backLabel}
-    </Link>
-  );
-}
-
 function CableStickyNav() {
   const [active, setActive] = useState<string>(NAV[0].id);
 
@@ -67,6 +46,13 @@ function CableStickyNav() {
   return (
     <nav aria-label="Cable product sections" className="cv41-sticky sticky top-16 z-30 md:top-[4.5rem]">
       <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+        <Link
+          href="/business"
+          className="cv41-nav-back shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD400]"
+          aria-label="Back to GONA Business"
+        >
+          ← Business
+        </Link>
         {NAV.map((item) => {
           const on = active === item.id;
           return (
@@ -282,10 +268,10 @@ export function CableV41Experience() {
         id="cable-overview"
         className="cv41-hero border-b border-[#6D4AFF]/12"
       >
-        <div className="cv41-hero-inner mx-auto max-w-6xl px-5 pt-8 pb-16 sm:px-6 sm:pt-10 sm:pb-20 lg:pb-24">
-          <BackToBusiness className="mb-8" />
+        <div className="cv41-hero-inner mx-auto max-w-6xl px-5 pt-6 pb-16 sm:px-6 sm:pt-8 sm:pb-20 lg:pb-24">
           <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-6">
-            <Reveal>
+            <div>
+              <Reveal>
               <div className="flex flex-wrap items-center gap-3">
                 <p className="text-xs font-bold tracking-[0.28em] uppercase" style={{ color: CV.deep }}>
                   {c.hero.eyebrow}
@@ -323,7 +309,8 @@ export function CableV41Experience() {
               >
                 {c.hero.tertiaryCta} ↓
               </a>
-            </Reveal>
+              </Reveal>
+            </div>
             <HeroComposition />
           </div>
         </div>
@@ -773,7 +760,13 @@ export function CableV41Experience() {
               </BizSecondaryCta>
             </div>
             <div className="mt-10">
-              <BackToBusiness className="!text-white/80 hover:!text-[#FFD400]" />
+              <Link
+                href="/business"
+                className="text-sm font-semibold text-white/80 transition hover:text-[#FFD400] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FFD400]"
+                aria-label="Back to GONA Business"
+              >
+                ← GONA Business
+              </Link>
             </div>
           </Reveal>
         </div>
