@@ -192,13 +192,55 @@ export function CableRegisterWizard() {
       if (sessionData.session) {
         await supabase.auth.refreshSession();
       }
-      const {
+      let {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
 
+      // Email may already be confirmed server-side while this browser has no
+      // PKCE session (e.g. confirm opened in another cookie jar). Recover with
+      // the credentials still held in this wizard's React state only.
+      if (userError || !user) {
+        const email = account.email.trim().toLowerCase();
+        const password = account.password;
+        if (email && password) {
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (signInError) {
+            const m = signInError.message.toLowerCase();
+            if (m.includes("email not confirmed") || m.includes("email_not_confirmed")) {
+              setError(
+                "Email is not verified yet. Open the newest Confirm Email link from your inbox in this browser, then click continue.",
+              );
+              return;
+            }
+            if (m.includes("invalid login") || m.includes("invalid credentials")) {
+              setError("Incorrect email or password. Use the same password you registered with, then try again.");
+              return;
+            }
+            setError(
+              "Could not restore your session after verification. Open the confirmation link from your inbox in this browser, then try again.",
+            );
+            return;
+          }
+
+          user = signInData.user;
+          userError = null;
+        } else if (userError) {
+          setError(
+            "Could not refresh your session. Open the confirmation link from your inbox in this browser, then try again.",
+          );
+          return;
+        }
+      }
+
       if (userError) {
-        setError("Could not refresh your session. Open the confirmation link from your inbox in this browser, then try again.");
+        setError(
+          "Could not refresh your session. Open the confirmation link from your inbox in this browser, then try again.",
+        );
         return;
       }
 
